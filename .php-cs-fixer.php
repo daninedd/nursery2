@@ -1,12 +1,8 @@
 <?php
 
 $header = <<<'EOF'
-This file is part of Hyperf.
-
-@link     https://www.hyperf.io
-@document https://hyperf.wiki
-@contact  group@hyperf.io
-@license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+This file is part of Nursery2.
+@author    denglei@4587@163.com
 EOF;
 
 return (new PhpCsFixer\Config())
