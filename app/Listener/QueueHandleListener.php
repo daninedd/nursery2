@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 /**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * This file is part of Nursery2.
+ * @author    denglei@4587@163.com
  */
 namespace App\Listener;
 
@@ -22,9 +18,7 @@ use Hyperf\Event\Contract\ListenerInterface;
 use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
 use Hyperf\Logger\LoggerFactory;
 
-/**
- * @Listener
- */
+#[Listener]
 class QueueHandleListener implements ListenerInterface
 {
     /**
@@ -45,24 +39,18 @@ class QueueHandleListener implements ListenerInterface
 
     public function listen(): array
     {
-        return [
-            AfterHandle::class,
-            BeforeHandle::class,
-            FailedHandle::class,
-            RetryHandle::class,
-        ];
+        return [AfterHandle::class, BeforeHandle::class, FailedHandle::class, RetryHandle::class];
     }
 
-    public function process(object $event)
+    public function process(object $event):void
     {
-        if ($event instanceof Event && $event->message->job()) {
-            $job = $event->message->job();
+        if ($event instanceof Event && $event->getMessage()->job()) {
+            $job = $event->getMessage()->job();
             $jobClass = get_class($job);
             if ($job instanceof AnnotationJob) {
                 $jobClass = sprintf('Job[%s@%s]', $job->class, $job->method);
             }
             $date = date('Y-m-d H:i:s');
-
             switch (true) {
                 case $event instanceof BeforeHandle:
                     $this->logger->info(sprintf('[%s] Processing %s.', $date, $jobClass));

@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 /**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * This file is part of Nursery2.
+ * @author    denglei@4587@163.com
  */
 use Hyperf\Contract\StdoutLoggerInterface;
 use Psr\Log\LogLevel;
@@ -20,7 +16,7 @@ return [
         'log_level' => [
             LogLevel::ALERT,
             LogLevel::CRITICAL,
-            LogLevel::DEBUG,
+            # LogLevel::DEBUG,
             LogLevel::EMERGENCY,
             LogLevel::ERROR,
             LogLevel::INFO,
