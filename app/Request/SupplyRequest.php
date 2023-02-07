@@ -201,7 +201,7 @@ class SupplyRequest extends FormRequest
         }
         $query->orderByDesc('sort');
         $query->orderBy('updated_at', 'DESC');
-        return $query->paginate(5);
+        return $query->paginate(20);
     }
 
     public function getUserSupplyList()

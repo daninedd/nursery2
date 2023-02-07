@@ -7,6 +7,7 @@ declare (strict_types=1);
  */
 namespace App\Model;
 
+use Carbon\Carbon;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\ModelCache\Cacheable;
 use Hyperf\Snowflake\Concern\Snowflake;
@@ -39,6 +40,7 @@ use Hyperf\Snowflake\Concern\Snowflake;
  * @property int $num 求购数量
  * @property string $address 求购地址
  * @property int $access_offer 0:未接受报价,1:接受报价
+ * @property int $visit_count 访问数量
  * @property string $expire_at 截止日期
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
@@ -70,9 +72,9 @@ class Purchase extends Model
      *
      * @var array
      */
-    protected array $casts = ['id' => 'string', 'product_id' => 'integer', 'category_id' => 'integer', 'user_id' => 'string', 'show_target_price' => 'integer', 'push_status' => 'integer', 'recommend_status' => 'integer', 'verify_status' => 'integer', 'sort' => 'integer', 'offer_count' => 'integer', 'must_have_price' => 'integer', 'must_have_image' => 'integer', 'must_have_addr' => 'integer', 'unit' => 'integer', 'price_type' => 'integer', 'product_snapshot' => 'array', 'category_snapshot' => 'array', 'specs' => 'array', 'address' => 'array', 'medias' => 'array', 'num' => 'integer', 'access_offer' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected array $casts = ['id' => 'string', 'product_id' => 'integer', 'category_id' => 'integer', 'user_id' => 'string', 'show_target_price' => 'integer', 'push_status' => 'integer', 'recommend_status' => 'integer', 'verify_status' => 'integer', 'sort' => 'integer', 'offer_count' => 'integer', 'must_have_price' => 'integer', 'must_have_image' => 'integer', 'must_have_addr' => 'integer', 'unit' => 'integer', 'price_type' => 'integer', 'product_snapshot' => 'array', 'category_snapshot' => 'array', 'specs' => 'array', 'address' => 'array', 'medias' => 'array', 'num' => 'integer', 'access_offer' => 'integer', 'visit_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
     protected array $hidden = ['product_id', 'push_status', 'recommend_status', 'verify_status', 'sort', 'access_offer', 'target_price', 'show_target_price', 'offer_count', 'product_snapshot', 'category_snapshot', 'ambiguous_price', 'deleted_at'];
-    protected array $appends = ['skus'];
+    protected array $appends = ['skus', 'is_expired'];
     public function asJson($value) :string|false
     {
         return json_encode($value, JSON_UNESCAPED_UNICODE);
@@ -105,6 +107,10 @@ class Purchase extends Model
             }
         }
         return $re;
+    }
+
+    public function getIsExpiredAttribute(){
+        return Carbon::now()->gt($this->expire_at);
     }
     public function getDefaultUrlAttribute()
     {

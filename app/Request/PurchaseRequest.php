@@ -303,6 +303,8 @@ class PurchaseRequest extends FormRequest
             $height_value = $height ? explode(',', $height) : [];
             $sql = '';
             if ($crown_value){
+                $crown_value[0] = intval($crown_value[0]) ?: '';
+                $crown_value[1] = intval($crown_value[1]) ?: '';
                 if ($crown_value[0] && $crown_value[1]){
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
                                        'value1')) as UNSIGNED) between $crown_value[0] and $crown_value[1]";
@@ -313,10 +315,14 @@ class PurchaseRequest extends FormRequest
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
                                        'value1')) as UNSIGNED) <= $crown_value[1]";
                 }
-                $query->whereRaw($sql);
+                if ($sql){
+                    $query->whereRaw($sql);
+                }
             }
 
             if ($diameter_value){
+                $diameter_value[0] = intval($diameter_value[0]) ?: '';
+                $diameter_value[1] = intval($diameter_value[1]) ?: '';
                 if ($diameter_value[0] && $diameter_value[1]){
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
                                        'value1')) as UNSIGNED) between $diameter_value[0] and $diameter_value[1]";
@@ -327,10 +333,14 @@ class PurchaseRequest extends FormRequest
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
                                        'value1')) as UNSIGNED) <= $diameter_value[1]";
                 }
-                $query->whereRaw($sql);
+                if ($sql){
+                    $query->whereRaw($sql);
+                }
             }
 
             if($height_value){
+                $height_value[0] = intval($height_value[0]) ?: '';
+                $height_value[1] = intval($height_value[1]) ?: '';
                 if ($height_value[0] && $height_value[1]){
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
                                        'value1')) as UNSIGNED) between $height_value[0] and $height_value[1]";
@@ -341,17 +351,27 @@ class PurchaseRequest extends FormRequest
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
                                        'value1')) as UNSIGNED) <= $height_value[1]";
                 }
-                $query->whereRaw($sql);
+                if ($sql){
+                    $query->whereRaw($sql);
+                }
             }
         }
-        if (isset($validatedData['order1']) && $validatedData['order1']) {
-            $query->orderBy('push_status', $validatedData['order1']);
-        }
-        if (isset($validatedData['order2']) && $validatedData['order2']) {
-            $query->orderBy('expire_at', $validatedData['order2']);
-        }
-        if (isset($validatedData['order3']) && $validatedData['order3']) {
-            $query->orderBy('created_at', $validatedData['order3']);
+        if ($order){
+            if ($order == 'visit'){
+                $query->orderBy('visit_count', 'desc');
+            }elseif ($order == 'publish_time'){
+                $query->orderBy('updated_at', 'desc');
+            }
+        }else{
+            if (isset($validatedData['order1']) && $validatedData['order1']) {
+                $query->orderBy('push_status', $validatedData['order1']);
+            }
+            if (isset($validatedData['order2']) && $validatedData['order2']) {
+                $query->orderBy('expire_at', $validatedData['order2']);
+            }
+            if (isset($validatedData['order3']) && $validatedData['order3']) {
+                $query->orderBy('created_at', $validatedData['order3']);
+            }
         }
         $query->orderByRaw('sort desc, created_at desc');
         return $query->paginate(10);

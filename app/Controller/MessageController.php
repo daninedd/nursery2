@@ -102,4 +102,25 @@ class MessageController extends AbstractController
         // $return = ['list' => $list, 'chatUser' => $chatUser->getAttributes()];
         return $this->success($list);
     }
+
+
+    #[GetMapping(path: 'createConversation')]
+    public function createConversation()
+    {
+        $userId = $this->request->getAttribute('userId');
+        $conversationId = $this->request->query('c_id');
+        $page = $this->request->query('page', 1);
+        if (! $conversationId) {
+            return $this->failed();
+        }
+        $mongoClient = ApplicationContext::getContainer()->get(MongoTask::class);
+        $list = $mongoClient->getChatList($page, $conversationId);
+        // 获取聊天对象的头像
+        // $conversation = $mongoClient->query('nursery.conversations', ['_id' => new ObjectId($conversationId)]);
+        // $chatObjIds = $conversation[0]->participants;
+        // $chatObjId = array_diff($chatObjIds, [$userId]);
+        // $chatUser = User::first($chatObjId[0]);
+        // $return = ['list' => $list, 'chatUser' => $chatUser->getAttributes()];
+        return $this->success($list);
+    }
 }

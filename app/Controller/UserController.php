@@ -112,4 +112,16 @@ class UserController extends AbstractController
         $data = ['avatar' => $user->avatar, 'nickname' => $user->name, 'full_avatar' => $user->full_avatar];
         return $this->success($data);
     }
+
+    /**
+     *获取用户虚拟号码
+     */
+    #[GetMapping(path: 'getPhoneNumber')]
+    public function getPhoneNumber(): \Psr\Http\Message\ResponseInterface
+    {
+        $userId = $this->request->getAttribute('userId');
+        //$user = User::findFromCache($userId);
+        $data = ['v_phone' => '13350854583'];
+        return $this->success($data);
+    }
 }

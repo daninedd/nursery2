@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5394cd84c85021bf98f34a285bc8e957",
+    "content-hash": "678b18baa1fabef814778678dbc79fff",
     "packages": [
         {
             "name": "96qbhy/hyperf-auth",
@@ -1845,16 +1845,16 @@
         },
         {
             "name": "hyperf/database",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/database.git",
-                "reference": "7253376f7e9adcaa167bbd66228ac08fdd5f7134"
+                "reference": "5dfb6673a37861a481d23b6f2d95bfc5fdec4357"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/database/zipball/7253376f7e9adcaa167bbd66228ac08fdd5f7134",
-                "reference": "7253376f7e9adcaa167bbd66228ac08fdd5f7134",
+                "url": "https://api.github.com/repos/hyperf/database/zipball/5dfb6673a37861a481d23b6f2d95bfc5fdec4357",
+                "reference": "5dfb6673a37861a481d23b6f2d95bfc5fdec4357",
                 "shasum": ""
             },
             "require": {
@@ -1898,7 +1898,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-01-19T06:28:09+00:00"
+            "time": "2023-02-05T02:57:17+00:00"
         },
         {
             "name": "hyperf/db-connection",
@@ -3083,16 +3083,16 @@
         },
         {
             "name": "hyperf/redis",
-            "version": "v3.0.2",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hyperf/redis.git",
-                "reference": "b5e59c2612bf3f6b6fd5d024e25c973a72f62fbe"
+                "reference": "d13198587b8c75e84de1ba071e6c7c6c090598a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hyperf/redis/zipball/b5e59c2612bf3f6b6fd5d024e25c973a72f62fbe",
-                "reference": "b5e59c2612bf3f6b6fd5d024e25c973a72f62fbe",
+                "url": "https://api.github.com/repos/hyperf/redis/zipball/d13198587b8c75e84de1ba071e6c7c6c090598a0",
+                "reference": "d13198587b8c75e84de1ba071e6c7c6c090598a0",
                 "shasum": ""
             },
             "require": {
@@ -3139,7 +3139,7 @@
                 "pull-request": "https://github.com/hyperf/hyperf/pulls",
                 "source": "https://github.com/hyperf/hyperf"
             },
-            "time": "2023-01-09T08:49:03+00:00"
+            "time": "2023-02-03T01:56:53+00:00"
         },
         {
             "name": "hyperf/server",
@@ -4073,6 +4073,58 @@
                 }
             ],
             "time": "2022-04-17T13:12:02+00:00"
+        },
+        {
+            "name": "mix/redis-subscriber",
+            "version": "v3.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mix-php/redis-subscriber.git",
+                "reference": "13bf473a85667dd25d801a7f7f8ac2a65948900d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mix-php/redis-subscriber/zipball/13bf473a85667dd25d801a7f7f8ac2a65948900d",
+                "reference": "13bf473a85667dd25d801a7f7f8ac2a65948900d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-swoole": ">=4.4.4",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mix\\Redis\\Subscriber\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu,jian",
+                    "email": "coder.keda@gmail.com"
+                }
+            ],
+            "description": "Redis native protocol Subscriber based on Swoole coroutine",
+            "homepage": "https://openmix.org/mix-php",
+            "keywords": [
+                "mix",
+                "redis",
+                "subscribe",
+                "subscriber",
+                "swoole"
+            ],
+            "support": {
+                "issues": "https://github.com/mix-php/redis-subscriber/issues",
+                "source": "https://github.com/mix-php/redis-subscriber/tree/v3.0.4"
+            },
+            "time": "2022-07-03T12:59:11+00:00"
         },
         {
             "name": "monolog/monolog",

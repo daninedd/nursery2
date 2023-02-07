@@ -20,7 +20,7 @@ use Hyperf\Snowflake\Concern\Snowflake;
  * @property int $category_id
  * @property array $category_snapshot
  * @property array $product_snapshot
- * @property int $user_id
+ * @property string $user_id
  * @property string $contact
  * @property array $specs
  * @property string $lowest_price
@@ -69,7 +69,7 @@ class Supply extends Model
      *
      * @var array
      */
-    protected array $casts = ['id' => 'string', 'product_id' => 'integer', 'category_id' => 'integer', 'user_id' => 'integer', 'ambiguous_price' => 'integer', 'price_type' => 'integer', 'product_snapshot' => 'array', 'category_snapshot' => 'array', 'specs' => 'array', 'address' => 'array', 'medias' => 'array', 'push_status' => 'integer', 'recommend_status' => 'integer', 'verify_status' => 'integer', 'sort' => 'integer', 'num' => 'integer', 'visit_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected array $casts = ['id' => 'string', 'product_id' => 'integer', 'category_id' => 'integer', 'user_id' => 'string', 'ambiguous_price' => 'integer', 'price_type' => 'integer', 'product_snapshot' => 'array', 'category_snapshot' => 'array', 'specs' => 'array', 'address' => 'array', 'medias' => 'array', 'push_status' => 'integer', 'recommend_status' => 'integer', 'verify_status' => 'integer', 'sort' => 'integer', 'num' => 'integer', 'visit_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
     protected array $hidden = ['product_id', 'category_id', 'push_status', 'recommend_status', 'verify_status', 'expire_at', 'updated_at', 'deleted_at', 'product_snapshot', 'category_snapshot', 'ambiguous_price'];
     protected array $appends = ['skus'];
     public function asJson($value):string|false
