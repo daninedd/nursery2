@@ -85,7 +85,7 @@ class WebSocketController extends BaseNamespace
         if (! isset($message['content']) || ! $message['content']) {
             return false;
         }
-        if (! isset($message['msg_type']) || ! in_array($message['msg_type'], ['text', 'image', 'video'])) {
+        if (! isset($message['msg_type']) || ! in_array($message['msg_type'], ['text', 'image', 'video', 'card'])) {
             return false;
         }
         $sid = $this->redis->hGet('ws:socketio', $message['user_id']);
@@ -133,7 +133,7 @@ class WebSocketController extends BaseNamespace
             // 推送消息
             $socket->to($sid)->emit('receiveMessage', array_merge(['message_id' => $messageId], $msg));
         }
-        return array_merge(['message_id' => $messageId], $msg);
+        return array_merge(['message_id' => $messageId], array_merge($msg, ['contact_avatar' => User::findFromCache($message['user_id'])->full_avatar]));
     }
 
     /**

@@ -41,6 +41,7 @@
         "hyperf/task": "~3.0",
         "hyperf/validation": "~3.0",
         "hyperf/websocket-server": "^3.0",
+        "mix/redis-subscriber": "^3.0",
         "overtrue/easy-sms": "^2.2",
         "phper666/jwt-auth": "^4.0"
     },
