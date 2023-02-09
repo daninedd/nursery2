@@ -103,7 +103,6 @@ class MessageController extends AbstractController
         return $this->success($list);
     }
 
-
     #[GetMapping(path: 'createConversation')]
     public function createConversation()
     {

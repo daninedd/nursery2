@@ -53,7 +53,7 @@ class Encrypt
             $box[$a] = $box[$j];
             $box[$j] = $tmp;
             // 从密匙簿得出密匙进行异或，再转成字符
-            $result .= chr(ord($string[$i]) ^ ($box[($box[$a] + $box[$j]) % 256]));
+            $result .= chr(ord($string[$i]) ^ $box[($box[$a] + $box[$j]) % 256]);
         }
         if ($operation == 'DECODE') {
             // 验证数据有效性，请看未加密明文的格式

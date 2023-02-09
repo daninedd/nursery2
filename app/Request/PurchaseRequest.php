@@ -16,7 +16,6 @@ use App\Model\Purchase;
 use App\Model\User;
 use App\Model\UserOffer;
 use Hyperf\Database\Query\Builder;
-use Hyperf\DbConnection\Db;
 use Hyperf\Paginator\LengthAwarePaginator;
 use Hyperf\Validation\Request\FormRequest;
 use Hyperf\Validation\Rule;
@@ -111,7 +110,7 @@ class PurchaseRequest extends FormRequest
             'order1' => [Rule::in(['asc', 'desc'])],
             'order2' => [Rule::in(['asc', 'desc'])],
             'order3' => [Rule::in(['asc', 'desc'])],
-            //列表里的筛选项
+            // 列表里的筛选项
             'areas' => ['string'],
             'category' => ['string'],
             'crown' => ['string'],
@@ -288,81 +287,81 @@ class PurchaseRequest extends FormRequest
                     ->orWhere('product_nickname', 'like', "%{$keyword}%");
             });
         }
-        if ($areas){
+        if ($areas) {
             $addr = Address::findFromCache($areas);
             $query->whereJsonContains('address', $addr->name);
         }
-        if ($category){
+        if ($category) {
             $query->whereIn('category_id', explode(',', $category));
         }
 
-        if ($crown || $diameter || $height){
-            //组装筛选条件
+        if ($crown || $diameter || $height) {
+            // 组装筛选条件
             $crown_value = $crown ? explode(',', $crown) : [];
             $diameter_value = $diameter ? explode(',', $diameter) : [];
             $height_value = $height ? explode(',', $height) : [];
             $sql = '';
-            if ($crown_value){
+            if ($crown_value) {
                 $crown_value[0] = intval($crown_value[0]) ?: '';
                 $crown_value[1] = intval($crown_value[1]) ?: '';
-                if ($crown_value[0] && $crown_value[1]){
+                if ($crown_value[0] && $crown_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
-                                       'value1')) as UNSIGNED) between $crown_value[0] and $crown_value[1]";
-                }elseif ($crown_value[0] && !$crown_value[1]){
+                                       'value1')) as UNSIGNED) between {$crown_value[0]} and {$crown_value[1]}";
+                } elseif ($crown_value[0] && ! $crown_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
-                                       'value1')) as UNSIGNED) >= $crown_value[0]";
-                }elseif (!$crown_value[0] and $crown_value[1]){
+                                       'value1')) as UNSIGNED) >= {$crown_value[0]}";
+                } elseif (! $crown_value[0] and $crown_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
-                                       'value1')) as UNSIGNED) <= $crown_value[1]";
+                                       'value1')) as UNSIGNED) <= {$crown_value[1]}";
                 }
-                if ($sql){
+                if ($sql) {
                     $query->whereRaw($sql);
                 }
             }
 
-            if ($diameter_value){
+            if ($diameter_value) {
                 $diameter_value[0] = intval($diameter_value[0]) ?: '';
                 $diameter_value[1] = intval($diameter_value[1]) ?: '';
-                if ($diameter_value[0] && $diameter_value[1]){
+                if ($diameter_value[0] && $diameter_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
-                                       'value1')) as UNSIGNED) between $diameter_value[0] and $diameter_value[1]";
-                }elseif ($diameter_value[0] && !$diameter_value[1]){
+                                       'value1')) as UNSIGNED) between {$diameter_value[0]} and {$diameter_value[1]}";
+                } elseif ($diameter_value[0] && ! $diameter_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
-                                       'value1')) as UNSIGNED) >= $diameter_value[0]";
-                }elseif (!$diameter_value[0] and $diameter_value[1]){
+                                       'value1')) as UNSIGNED) >= {$diameter_value[0]}";
+                } elseif (! $diameter_value[0] and $diameter_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
-                                       'value1')) as UNSIGNED) <= $diameter_value[1]";
+                                       'value1')) as UNSIGNED) <= {$diameter_value[1]}";
                 }
-                if ($sql){
+                if ($sql) {
                     $query->whereRaw($sql);
                 }
             }
 
-            if($height_value){
+            if ($height_value) {
                 $height_value[0] = intval($height_value[0]) ?: '';
                 $height_value[1] = intval($height_value[1]) ?: '';
-                if ($height_value[0] && $height_value[1]){
+                if ($height_value[0] && $height_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
-                                       'value1')) as UNSIGNED) between $height_value[0] and $height_value[1]";
-                }elseif ($height_value[0] && !$height_value[1]){
+                                       'value1')) as UNSIGNED) between {$height_value[0]} and {$height_value[1]}";
+                } elseif ($height_value[0] && ! $height_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
-                                       'value1')) as UNSIGNED) >= $height_value[0]";
-                }elseif (!$height_value[0] and $height_value[1]){
+                                       'value1')) as UNSIGNED) >= {$height_value[0]}";
+                } elseif (! $height_value[0] and $height_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
-                                       'value1')) as UNSIGNED) <= $height_value[1]";
+                                       'value1')) as UNSIGNED) <= {$height_value[1]}";
                 }
-                if ($sql){
+                if ($sql) {
                     $query->whereRaw($sql);
                 }
             }
         }
-        if ($order){
-            if ($order == 'visit'){
+        if ($order) {
+            if ($order == 'visit') {
                 $query->orderBy('visit_count', 'desc');
-            }elseif ($order == 'publish_time'){
+            } elseif ($order == 'publish_time') {
                 $query->orderBy('updated_at', 'desc');
             }
-        }else{
+        } else {
             if (isset($validatedData['order1']) && $validatedData['order1']) {
                 $query->orderBy('push_status', $validatedData['order1']);
             }

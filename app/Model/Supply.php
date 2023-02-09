@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
@@ -12,6 +12,7 @@ use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\ModelCache\Cacheable;
 use Hyperf\Snowflake\Concern\Snowflake;
+
 /**
  * @property string $id
  * @property string $title
@@ -48,34 +49,40 @@ class Supply extends Model
 {
     use Snowflake;
     use Cacheable;
+
     public const PUSH_STATUS_ENABLE = 1;
+
     public const PUSH_STATUS_DISABLE = 0;
+
     #[Inject]
     protected Cache $cache;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected ?string $table = 'supplies';
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected array $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
-     *
-     * @var array
      */
     protected array $casts = ['id' => 'string', 'product_id' => 'integer', 'category_id' => 'integer', 'user_id' => 'string', 'ambiguous_price' => 'integer', 'price_type' => 'integer', 'product_snapshot' => 'array', 'category_snapshot' => 'array', 'specs' => 'array', 'address' => 'array', 'medias' => 'array', 'push_status' => 'integer', 'recommend_status' => 'integer', 'verify_status' => 'integer', 'sort' => 'integer', 'num' => 'integer', 'visit_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
     protected array $hidden = ['product_id', 'category_id', 'push_status', 'recommend_status', 'verify_status', 'expire_at', 'updated_at', 'deleted_at', 'product_snapshot', 'category_snapshot', 'ambiguous_price'];
+
     protected array $appends = ['skus'];
-    public function asJson($value):string|false
+
+    public function asJson($value): string|false
     {
         return json_encode($value, JSON_UNESCAPED_UNICODE);
     }
+
     public function getMediasAttribute($value)
     {
         $value = json_decode($value, true);
@@ -85,6 +92,7 @@ class Supply extends Model
         }
         return $value;
     }
+
     public function getSkusAttribute()
     {
         $re = [];
@@ -95,7 +103,8 @@ class Supply extends Model
         }
         return $re;
     }
-    public function getProgressAttribute() : float|int
+
+    public function getProgressAttribute(): float|int
     {
         $show = $this->specs['show'] ?? [];
         $hiddens = $this->specs['hiddens'] ?? [];
@@ -105,31 +114,38 @@ class Supply extends Model
         $progress = round($progress, 2);
         return 100 * $progress;
     }
+
     public function getCategoryAttribute()
     {
         return $this->product_name ?: $this->category_snapshot['name'];
     }
+
     public function getLowestPriceAttribute($value)
     {
         return floatval($value);
     }
+
     public function getHighestPriceAttribute($value)
     {
         return floatval($value);
     }
+
     public function getHasRefreshAttribute()
     {
         return $this->cache->has(self::genRefreshCacheKey($this->id));
     }
+
     public function getHasEnshrineAttribute()
     {
         $user = $this->getContainer()->get(RequestInterface::class)->getAttribute('userId');
         return Enshrine::where([['user_id', $user], ['type', Enshrine::TYPE_SUPPLY], ['item_id', $this->id]])->value('id');
     }
+
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
     public static function genRefreshCacheKey($supply_id)
     {
         return 'refresh:' . $supply_id;

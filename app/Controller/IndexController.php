@@ -8,6 +8,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Middleware\JwtAuthMiddleware;
+use App\Request\PurchaseRequest;
+use App\Request\SearchRequest;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middlewares;
@@ -29,197 +31,32 @@ class IndexController extends AbstractController
         return $this->success($data);
     }
 
-    #[Middlewares([JwtAuthMiddleware::class])]
-    #[GetMapping(path: '/getSupplyList')]
-    public function getSupplyList()
-    {
-        $user = $this->request->input('user', 'Hyperf');
-        $method = $this->request->getMethod();
 
-        for ($i = 0; $i < 7; ++$i) {
-            $singleSupplyData = [
-                'id' => $i + 1,
-                'image' => [['id' => 5, 'src' => self::IP . '/static/images/5821640351513_.pic.jpg']],
-                'avatar' => [['id' => 6, 'src' => self::IP . '/static/images/123.jpg']],
-                'title' => '桂花树' . rand(0, 20),
-                'skus' => [
-                    ['key' => '冠幅', 'value' => '120-150cm'], ['key' => '高度', 'value' => '15m'],
-                ],
-                'price' => [
-                    'minPrice' => '120',
-                    'maxPrice' => '150',
-                ],
-                'num' => rand(0, 9999999),
-                'nickname' => '温江区林鑫园林',
-                'status' => rand(1, 2),
-                'image1' => self::IP . '/static/images/123.jpg',
-            ];
-            $supplyData[] = $singleSupplyData;
-        }
-//        sleep(5);
-
-        return [
-            'method' => $method,
-            'message' => "Hello {$user}.",
-            'data' => $supplyData,
-            'code' => 200,
-        ];
-    }
-
-    public function getPurchaseList()
-    {
-        $user = $this->request->input('user', 'Hyperf');
-        $method = $this->request->getMethod();
-
-        for ($i = 0; $i < 5; ++$i) {
-            $singleSupplyData = [
-                'id' => $i + 1,
-                'image' => [['id' => 5, 'src' => self::IP . '/static/images/5821640351513_.pic.jpg']],
-                'avatar' => [['id' => 6, 'src' => self::IP . '/static/images/123.jpg']],
-                'title' => '桂花树',
-                'skus' => [
-                    ['key' => '冠幅', 'value' => '120-150cm'], ['key' => '高度', 'value' => '15m'],
-                ],
-                'price' => [
-                    'minPrice' => '120',
-                    'maxPrice' => '150',
-                ],
-                'num' => rand(0, 9999999),
-                'nickname' => '温江区林鑫园林',
-                'status' => rand(1, 2),
-            ];
-            $supplyData[] = $singleSupplyData;
-        }
-
-        return [
-            'method' => $method,
-            'message' => "Hello {$user}.",
-            'data' => $supplyData,
-        ];
-    }
-
+    /**
+     *搜索接口.
+     */
+    #[GetMapping(path: 'search')]
     public function search()
     {
-        $get = $this->request->query();
-        $data = [
-            [
-                'id' => 1,
-                'title' => '龟甲冬青球',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 2,
-                'title' => '桂花树龟甲--啊实打实的',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-            [
-                'id' => 3,
-                'title' => '皂角树龟甲',
-                'sku' => [
-                    ['name' => '高度', 'value' => '5m'],
-                    ['name' => '冠幅', 'value' => '5m-6m'],
-                    ['name' => '米径', 'value' => '12-15cm'],
-                ],
-                'num' => '77678颗',
-                'status' => '1',
-            ],
-        ];
-        return [
-            'method' => '',
-            'message' => 'aaaa',
-            'data' => $data,
-        ];
+        $request = $this->container->get(SearchRequest::class);
+        $request->scene(SearchRequest::SCENE_SEARCH);
+        $request->validateResolved();
+        $data = $request->search();
+        return $this->success($data);
     }
 
+    /**
+     *获取热搜词.
+     */
+    #[GetMapping(path: 'getHotSearch')]
+    public function getHotSearch()
+    {
+        $request = $this->container->get(SearchRequest::class);
+        $request->scene(SearchRequest::SCENE_GET_HOT_SEARCH);
+        $request->validateResolved();
+        $data = $request->getHotSearch();
+        return $this->success($data);
+    }
     public function supplyDetail()
     {
         $id = $this->request->input('id');

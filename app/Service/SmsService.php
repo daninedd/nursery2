@@ -103,6 +103,6 @@ class SmsService
 
     protected function generateCode($length = 6): int
     {
-        return rand(pow(10, ($length - 1)), pow(10, $length) - 1);
+        return rand(pow(10, $length - 1), pow(10, $length) - 1);
     }
 }

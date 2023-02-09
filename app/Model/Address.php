@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
@@ -27,20 +27,20 @@ class Address extends Model
      * @var string
      */
     protected ?string $table = 'address';
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected array $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
-     *
-     * @var array
      */
     protected array $casts = ['id' => 'integer', 'parent_id' => 'integer', 'order' => 'integer', 'level' => 'integer', 'status' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
     protected array $hidden = ['order', 'level', 'status', 'created_at', 'updated_at', 'deleted_at'];
-    public function children() : \Hyperf\Database\Model\Relations\HasMany
+
+    public function children(): \Hyperf\Database\Model\Relations\HasMany
     {
         return $this->hasMany(Address::class, 'parent_id', 'id');
     }
