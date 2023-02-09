@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
@@ -30,18 +30,17 @@ class Product extends Model
      * @var string
      */
     protected ?string $table = 'products';
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected array $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
-     *
-     * @var array
      */
     protected array $casts = ['id' => 'integer', 'category_id' => 'integer', 'show_status' => 'integer', 'sort' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
     public function category()
     {
         return $this->hasOne(Category::class, 'id', 'category_id');

@@ -11,11 +11,10 @@ use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
 use Hyperf\Validation\ValidationException;
 use Psr\Http\Message\ResponseInterface;
-use Throwable;
 
 class ValidationExceptionHandler extends ExceptionHandler
 {
-    public function handle(Throwable $throwable, ResponseInterface $response)
+    public function handle(\Throwable $throwable, ResponseInterface $response)
     {
         $this->stopPropagation();
         /** @var \Hyperf\Validation\ValidationException $throwable */
@@ -27,7 +26,7 @@ class ValidationExceptionHandler extends ExceptionHandler
         return $response->withStatus($throwable->status)->withBody(new SwooleStream($body));
     }
 
-    public function isValid(Throwable $throwable): bool
+    public function isValid(\Throwable $throwable): bool
     {
         return $throwable instanceof ValidationException;
     }

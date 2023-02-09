@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
@@ -29,19 +29,18 @@ class Feedback extends Model
      * @var string
      */
     protected ?string $table = 'feedbacks';
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected array $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
-     *
-     * @var array
      */
     protected array $casts = ['id' => 'string', 'user_id' => 'string', 'reply_user' => 'string', 'created_at' => 'datetime', 'is_adopt' => 'integer', 'updated_at' => 'datetime', 'question_medias' => 'array', 'reply_medias' => 'array'];
-    public function getUser() : \Hyperf\Database\Model\Relations\BelongsTo
+
+    public function getUser(): \Hyperf\Database\Model\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'id', 'user_id');
     }

@@ -57,7 +57,7 @@ class AddressRequest extends FormRequest
                 $city = ['name' => $cities->name, 'value' => $cities->id, 'submenu' => [['name' => '全部区县', 'value' => $cities->id]]];
                 $province['submenu'][] = $city;
                 $last_arr_index = count($province['submenu']) - 1;
-                 //$province['submenu'][$last_arr_index]['submenu'][] = [];
+                // $province['submenu'][$last_arr_index]['submenu'][] = [];
                 foreach ($cities->children as $district) {
                     $province['submenu'][$last_arr_index]['submenu'][] = ['name' => $district->name, 'value' => $district->id];
                 }

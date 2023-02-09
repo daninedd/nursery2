@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
@@ -10,6 +10,7 @@ namespace App\Model;
 use Carbon\Carbon;
 use Hyperf\Snowflake\Concern\Snowflake;
 use Qbhy\HyperfAuth\Authenticatable;
+
 /**
  * @property string $id
  * @property string $name
@@ -31,11 +32,15 @@ use Qbhy\HyperfAuth\Authenticatable;
 class User extends Model implements Authenticatable
 {
     use Snowflake;
+
     public const GUEST = 'guest';
+
     // 游客
     public const MEMBER = 'member';
+
     // 绑定了手机号
     public const VIP = 'vip';
+
     // 手机号和昵称头像全部绑定
     /**
      * The table associated with the model.
@@ -43,34 +48,38 @@ class User extends Model implements Authenticatable
      * @var string
      */
     protected ?string $table = 'users';
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected array $fillable = ['name', 'avatar', 'open_id', 'member_status'];
+
     /**
      * The attributes that should be cast to native types.
-     *
-     * @var array
      */
     protected array $casts = ['id' => 'string', 'gender' => 'integer', 'vip_level' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime', 'profile_complete' => 'integer'];
+
     protected array $appends = ['join_days', 'full_avatar'];
+
     protected array $hidden = ['open_id', 'last_visit_at', 'id_card', 'phone', 'vip_level', 'updated_at', 'deleted_at'];
+
     public function getId()
     {
         return $this->id;
     }
-    public static function retrieveById($key) : ?Authenticatable
+
+    public static function retrieveById($key): ?Authenticatable
     {
         return self::find($key);
     }
+
     public function getJoinDaysAttribute()
     {
         $start = Carbon::parse($this->created_at);
         $end = Carbon::parse('now');
         return $start->diffInDays($end);
     }
+
     public function getFullAvatarAttribute()
     {
         if ($this->avatar) {

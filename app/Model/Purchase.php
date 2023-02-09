@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types=1);
+declare(strict_types=1);
 /**
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\ModelCache\Cacheable;
 use Hyperf\Snowflake\Concern\Snowflake;
+
 /**
  * @property string $id
  * @property string $title 求购标题
@@ -53,32 +54,37 @@ class Purchase extends Model
 {
     use Snowflake;
     use Cacheable;
+
     public const PUSH_STATUS_ENABLE = 1;
+
     public const PUSH_STATUS_DISABLE = 0;
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected ?string $table = 'purchases';
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected array $fillable = [];
+
     /**
      * The attributes that should be cast to native types.
-     *
-     * @var array
      */
     protected array $casts = ['id' => 'string', 'product_id' => 'integer', 'category_id' => 'integer', 'user_id' => 'string', 'show_target_price' => 'integer', 'push_status' => 'integer', 'recommend_status' => 'integer', 'verify_status' => 'integer', 'sort' => 'integer', 'offer_count' => 'integer', 'must_have_price' => 'integer', 'must_have_image' => 'integer', 'must_have_addr' => 'integer', 'unit' => 'integer', 'price_type' => 'integer', 'product_snapshot' => 'array', 'category_snapshot' => 'array', 'specs' => 'array', 'address' => 'array', 'medias' => 'array', 'num' => 'integer', 'access_offer' => 'integer', 'visit_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
     protected array $hidden = ['product_id', 'push_status', 'recommend_status', 'verify_status', 'sort', 'access_offer', 'target_price', 'show_target_price', 'offer_count', 'product_snapshot', 'category_snapshot', 'ambiguous_price', 'deleted_at'];
+
     protected array $appends = ['skus', 'is_expired'];
-    public function asJson($value) :string|false
+
+    public function asJson($value): string|false
     {
         return json_encode($value, JSON_UNESCAPED_UNICODE);
     }
+
     public function getMediasAttribute($value)
     {
         $value = json_decode($value, true);
@@ -88,7 +94,8 @@ class Purchase extends Model
         }
         return $value;
     }
-    public function getProgressAttribute() : float|int
+
+    public function getProgressAttribute(): float|int
     {
         $show = $this->specs['show'] ?? [];
         $hiddens = $this->specs['hiddens'] ?? [];
@@ -98,6 +105,7 @@ class Purchase extends Model
         $progress = round($progress, 2);
         return 100 * $progress;
     }
+
     public function getSkusAttribute()
     {
         $re = [];
@@ -109,22 +117,27 @@ class Purchase extends Model
         return $re;
     }
 
-    public function getIsExpiredAttribute(){
+    public function getIsExpiredAttribute()
+    {
         return Carbon::now()->gt($this->expire_at);
     }
+
     public function getDefaultUrlAttribute()
     {
         return $this->category_snapshot['icon'] ?: env('STATIC_PREFIX') . '/static/images/123.jpg';
     }
+
     public function getTargetPriceAttribute($value)
     {
         return floatval($value);
     }
+
     public function getHasEnshrineAttribute()
     {
         $user = $this->getContainer()->get(RequestInterface::class)->getAttribute('userId');
         return Enshrine::where([['user_id', $user], ['type', Enshrine::TYPE_PURCHASE], ['item_id', $this->id]])->value('id');
     }
+
     public function getMustHaveAttribute($value)
     {
         $r = [];
@@ -139,11 +152,13 @@ class Purchase extends Model
         }
         return $r;
     }
-    public function user() : \Hyperf\Database\Model\Relations\HasOne
+
+    public function user(): \Hyperf\Database\Model\Relations\HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
-    public function offers() : \Hyperf\Database\Model\Relations\HasMany
+
+    public function offers(): \Hyperf\Database\Model\Relations\HasMany
     {
         return $this->hasMany(UserOffer::class, 'purchase_id', 'id');
     }

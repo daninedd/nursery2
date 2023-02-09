@@ -120,7 +120,7 @@ class UserController extends AbstractController
     public function getPhoneNumber(): \Psr\Http\Message\ResponseInterface
     {
         $userId = $this->request->getAttribute('userId');
-        //$user = User::findFromCache($userId);
+        // $user = User::findFromCache($userId);
         $data = ['v_phone' => '13350854583'];
         return $this->success($data);
     }

@@ -42,7 +42,7 @@ class QueueHandleListener implements ListenerInterface
         return [AfterHandle::class, BeforeHandle::class, FailedHandle::class, RetryHandle::class];
     }
 
-    public function process(object $event):void
+    public function process(object $event): void
     {
         if ($event instanceof Event && $event->getMessage()->job()) {
             $job = $event->getMessage()->job();

@@ -7,26 +7,16 @@ declare(strict_types=1);
  */
 namespace App\Request;
 
-use App\Controller\SmsController;
 use App\Exception\BusinessException;
 use App\Model\Purchase;
 use App\Model\Supply;
 use App\Model\User;
-use App\Service\SmsService;
-use App\Service\WxService;
-use App\Utils\WeiXin\errorCode;
-use App\Utils\WeiXin\wxBizDataCrypt;
-use Hyperf\Cache\Cache;
-use Hyperf\Di\Annotation\Inject;
 use Hyperf\Validation\Request\FormRequest;
 use Hyperf\Validation\Rule;
-use League\Flysystem\Filesystem;
 
 class MessageRequest extends FormRequest
 {
-
     public const SCENE_CREATE_CONVERSATION = 'create_conversation';
-
 
     public array $scenes = [
         'create_conversation' => ['contact', 'item_id', 'type'],
@@ -49,13 +39,13 @@ class MessageRequest extends FormRequest
         return [
             'type' => ['required', Rule::in(['purchase', 'supply'])],
             'contact' => ['required', Rule::exists('users', 'id')],
-            'item_id' => ['required', function($attr, $value, $fail){
-                if ($this->validationData()['type'] == 'supply'){
-                    if (!Supply::findFromCache($value)->exists){
+            'item_id' => ['required', function ($attr, $value, $fail) {
+                if ($this->validationData()['type'] == 'supply') {
+                    if (! Supply::findFromCache($value)->exists) {
                         $fail('产品不存在');
                     }
-                }elseif ($this->validationData()['type'] == 'purchase'){
-                    if (!Purchase::findFromCache($value)->exists){
+                } elseif ($this->validationData()['type'] == 'purchase') {
+                    if (! Purchase::findFromCache($value)->exists) {
                         $fail('供应信息不存在');
                     }
                 }
