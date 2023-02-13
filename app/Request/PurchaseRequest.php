@@ -42,16 +42,16 @@ class PurchaseRequest extends FormRequest
     protected const MUST_HAVE = ['must_have_price', 'must_have_addr', 'must_have_image'];
 
     public array $scenes = [
-        'add' => ['title', 'productId', 'catedgoryId', 'target_price', 'specs', 'unit',
-            'price_type', 'address', 'media', 'remark', 'num', 'must_have', 'expire_at', ],
-        'edit' => ['id', 'title', 'target_price', 'specs', 'unit', 'expire_at', 'must_have',
-            'price_type', 'address', 'media', 'remark', 'num', ],
-        'detail' => ['id'],
-        'offer' => ['purchase_id', 'offerPrice', 'offerPhone', 'offerMedia', 'offerAddress', 'remark'],
+        self::SCENE_ADD => ['title', 'productId', 'catedgoryId', 'target_price', 'specs', 'unit',
+            'price_type', 'address', 'media', 'remark', 'num', 'must_have', 'expire_at', 'push_status'],
+        self::SCENE_EDIT => ['id', 'title', 'target_price', 'specs', 'unit', 'expire_at', 'must_have',
+            'price_type', 'address', 'media', 'remark', 'num', 'push_status'],
+        self::SCENE_DETAIL => ['id'],
+        self::SCENE_OFFER => ['purchase_id', 'offerPrice', 'offerPhone', 'offerMedia', 'offerAddress', 'remark'],
         self::SCENE_LIST => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'],
-        'user_purchase_list' => ['push_status'],
-        'end_purchase' => ['end_purchase_id'],
-        self::SCENE_RE_UP => ['end_purchase_id'],
+        self::SCENE_USER_PURCHASE_LIST => ['push_status'],
+        self::SCENE_END_PURCHASE => ['end_purchase_id'],
+        self::SCENE_RE_UP => ['re_up_id'],
     ];
 
     /**
@@ -70,15 +70,17 @@ class PurchaseRequest extends FormRequest
         $userId = $this->getRequest()->getAttribute('userId');
         $rules = [
             're_up_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
-                $query->where('push_status', Purchase::PUSH_STATUS_DISABLE);
                 $query->where('user_id', $userId);
             })],
-            'id' => ['required', Rule::exists('purchases')->where(function (Builder $query) use ($userId) {
-                $query->where('push_status', Purchase::PUSH_STATUS_ENABLE);
-                if ($this->getScene() == self::SCENE_EDIT) {
-                    $query->where('user_id', $userId);
+            'id' => ['required', function ($attr, $value, $fail) use ($userId) {
+                $purchase = Purchase::findFromCache($value);
+                if (empty($purchase)){
+                    $fail("未找到求购详情");
                 }
-            })],
+                if ($userId != $purchase->user_id && $purchase->push_status != Purchase::PUSH_STATUS_ENABLE){
+                    $fail("求购详情不存在~");
+                }
+            }],
             'end_purchase_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
                 $query->where('user_id', $userId);
                 $query->where('push_status', Purchase::PUSH_STATUS_ENABLE);
@@ -189,7 +191,7 @@ class PurchaseRequest extends FormRequest
         $purchase->target_price = $data['target_price'];
         $purchase->price_type = $data['price_type'];
         $purchase->unit = $data['unit'];
-        $purchase->push_status = 1;
+        $purchase->push_status = $data['push_status'];
         $purchase->recommend_status = 0;
         $purchase->verify_status = 1;
         $purchase->remark = $data['remark'];
@@ -217,7 +219,7 @@ class PurchaseRequest extends FormRequest
         $purchase->specs = $this->formatSpecs($data['specs']);
         $purchase->target_price = $data['target_price'];
         $purchase->price_type = $data['price_type'];
-        $purchase->push_status = Purchase::PUSH_STATUS_ENABLE;
+        $purchase->push_status = $data['push_status'];
         $purchase->remark = $data['remark'];
         $purchase->num = $data['num'];
         $purchase->address = $data['address'];
@@ -409,7 +411,12 @@ class PurchaseRequest extends FormRequest
     public function reUp(): bool|int
     {
         $data = $this->validated();
-        return Purchase::query()->update(['push_status' => Purchase::PUSH_STATUS_ENABLE, 'expire_at' => Carbon::now()->addDays(7)->format('Y-m-d')], [['id' => $data['id']]]);
+        $purchase = Purchase::findFromCache($data['re_up_id']);
+        $update = ['push_status' => Purchase::PUSH_STATUS_ENABLE];
+        if(Carbon::today()->gt($purchase->expire_at)){
+            $update['expire_at'] = Carbon::now()->addDays(7)->format('Y-m-d');
+        }
+        return Purchase::query()->update($update, [['id' => $data['re_up_id']]]);
     }
 
     protected function formatMedia($media): array
