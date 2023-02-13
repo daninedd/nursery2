@@ -52,7 +52,6 @@ class EnshrineRequest extends FormRequest
                 if ($this->input('type') == Enshrine::TYPE_SUPPLY && Supply::where([
                     ['id', $value],
                     ['push_status', Supply::PUSH_STATUS_ENABLE],
-                    ['expire_at', '>=', date('Y-m-d')],
                 ])
                     ->doesntExist()) {
                     $fail('供应信息不存在');

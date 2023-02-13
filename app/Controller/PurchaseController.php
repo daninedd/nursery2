@@ -121,4 +121,17 @@ class PurchaseController extends AbstractController
         $data = $request->getUserPurchaseList();
         return $this->success($data);
     }
+
+    /**
+     * 重新上架.
+     */
+    #[PostMapping(path: 'reUp')]
+    public function reUp(): \Psr\Http\Message\ResponseInterface
+    {
+        $request = $this->container->get(PurchaseRequest::class);
+        $request->scene(PurchaseRequest::SCENE_RE_UP);
+        $request->validateResolved();
+        $data = $request->reUp();
+        return $this->success($data);
+    }
 }
