@@ -35,6 +35,8 @@ class SupplyRequest extends FormRequest
 
     public const SCENE_REFRESH_SUPPLY = 'refresh_supply';
 
+    public const SCENE_RECOMMEND_LIST = 'recommend_list';
+
     public array $scenes = [
         'add' => ['title', 'productId', 'categoryId', 'price1', 'price2', 'specs', 'unit',
             'price_type', 'address', 'media', 'remark', 'num', ],
@@ -44,6 +46,7 @@ class SupplyRequest extends FormRequest
         'list' => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'], // order1:供应状态,order2:浏览次数,3:发布时间
         'user_supply_list' => ['push_status'],
         'refresh_supply' => ['supply_id'],
+        self::SCENE_RECOMMEND_LIST => ['id']
     ];
 
     #[Inject]
@@ -292,6 +295,25 @@ class SupplyRequest extends FormRequest
         }
         $query->orderByRaw('sort desc, created_at desc');
         return $query->paginate(20);
+    }
+
+
+    /** 获取推荐列表 */
+    public function getRecommedList()
+    {
+        $validatedData = $this->validated();
+        $id = $validatedData['id'];
+        /** @var Supply $detail */
+        $detail = Supply::findFromCache($id);
+        $product_name = $detail->product_name;
+        $query = Supply::query()->with('user:id,name,avatar')
+            ->where([['push_status', Supply::PUSH_STATUS_ENABLE], ['deleted_at', null], ['deleted_at', '<>', null]]);
+        $query->where(function (Builder $q) use ($product_name) {
+            $q->where('title', 'like', "%{$product_name}%")
+                ->orWhere('product_name', 'like', "%{$product_name}%");
+        });
+        $query->orderByRaw('sort desc, updated_at desc');
+        return $query->paginate(10);
     }
 
     public function getUserSupplyList()

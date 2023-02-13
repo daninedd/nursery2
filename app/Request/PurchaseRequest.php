@@ -15,6 +15,7 @@ use App\Model\Product;
 use App\Model\Purchase;
 use App\Model\User;
 use App\Model\UserOffer;
+use Carbon\Carbon;
 use Hyperf\Database\Query\Builder;
 use Hyperf\Paginator\LengthAwarePaginator;
 use Hyperf\Validation\Request\FormRequest;
@@ -36,6 +37,8 @@ class PurchaseRequest extends FormRequest
 
     public const SCENE_END_PURCHASE = 'end_purchase';
 
+    public const SCENE_RE_UP = 're_up';
+
     protected const MUST_HAVE = ['must_have_price', 'must_have_addr', 'must_have_image'];
 
     public array $scenes = [
@@ -48,6 +51,7 @@ class PurchaseRequest extends FormRequest
         self::SCENE_LIST => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'],
         'user_purchase_list' => ['push_status'],
         'end_purchase' => ['end_purchase_id'],
+        self::SCENE_RE_UP => ['end_purchase_id'],
     ];
 
     /**
@@ -65,6 +69,10 @@ class PurchaseRequest extends FormRequest
     {
         $userId = $this->getRequest()->getAttribute('userId');
         $rules = [
+            're_up_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
+                $query->where('push_status', Purchase::PUSH_STATUS_DISABLE);
+                $query->where('user_id', $userId);
+            })],
             'id' => ['required', Rule::exists('purchases')->where(function (Builder $query) use ($userId) {
                 $query->where('push_status', Purchase::PUSH_STATUS_ENABLE);
                 if ($this->getScene() == self::SCENE_EDIT) {
@@ -78,12 +86,10 @@ class PurchaseRequest extends FormRequest
             'purchase_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
                 $query->where('push_status', Purchase::PUSH_STATUS_ENABLE);
                 $query->where('user_id', '<>', $userId);
-            }),
-                //                function ($attr, $value, $fail) use ($userId) {
-                //                $offer = UserOffer::where([['purchase_id', $value], ['user_id', $userId]])->exists();
-                //                if ($offer) {
-                //                    $fail('您已经报过价了');
-                //                }}
+            }), function ($attr, $value, $fail) use ($userId) {
+                $offer = UserOffer::where([['purchase_id', $value], ['user_id', $userId]])->exists();
+                if ($offer) {$fail('您已经报过价了');}
+            }
             ],
             'title' => 'required|max:32',
             'productId' => ['present', 'int', function ($attr, $value, $fail) {
@@ -397,6 +403,13 @@ class PurchaseRequest extends FormRequest
         $results->data = $results->makeHidden('specs');
         $results->data = $results->makeVisible(['updated_at', 'offer_count']);
         return $results;
+    }
+
+    /** 重新上架 */
+    public function reUp(): bool|int
+    {
+        $data = $this->validated();
+        return Purchase::query()->update(['push_status' => Purchase::PUSH_STATUS_ENABLE, 'expire_at' => Carbon::now()->addDays(7)->format('Y-m-d')], [['id' => $data['id']]]);
     }
 
     protected function formatMedia($media): array

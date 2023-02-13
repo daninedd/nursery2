@@ -94,4 +94,17 @@ class SupplyController extends AbstractController
         $data = $request->refreshUserSupply();
         return $this->success($data);
     }
+
+    /**
+     * 推荐供应列表.
+     */
+    #[GetMapping(path: 'getRecommendList')]
+    public function getRecommendList()
+    {
+        $request = $this->container->get(SupplyRequest::class);
+        $request->scene(SupplyRequest::SCENE_RECOMMEND_LIST);
+        $request->validateResolved();
+        $data = $request->getRecommedList();
+        return $this->success($data);
+    }
 }
