@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 /**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * This file is part of Nursery2.
+ * @author    denglei@4587@163.com
  */
 namespace App\Listener;
 
@@ -20,9 +16,7 @@ use Hyperf\Utils\Str;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * @Listener
- */
+#[Listener]
 class DbQueryExecutedListener implements ListenerInterface
 {
     /**
@@ -37,15 +31,13 @@ class DbQueryExecutedListener implements ListenerInterface
 
     public function listen(): array
     {
-        return [
-            QueryExecuted::class,
-        ];
+        return [QueryExecuted::class];
     }
 
     /**
      * @param QueryExecuted $event
      */
-    public function process(object $event)
+    public function process(object $event): void
     {
         if ($event instanceof QueryExecuted) {
             $sql = $event->sql;
@@ -54,7 +46,6 @@ class DbQueryExecutedListener implements ListenerInterface
                     $sql = Str::replaceFirst('?', "'{$value}'", $sql);
                 }
             }
-
             $this->logger->info(sprintf('[%s] %s', $event->time, $sql));
         }
     }
