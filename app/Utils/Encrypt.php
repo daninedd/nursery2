@@ -7,7 +7,6 @@ declare(strict_types=1);
  */
 namespace App\Utils;
 
-// test
 class Encrypt
 {
     public static function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0)
