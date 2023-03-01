@@ -14,7 +14,6 @@ use App\Model\User;
 use Hyperf\Validation\Request\FormRequest;
 use Hyperf\Validation\Rule;
 
-// todo 暂未做完
 class FeedbackRequest extends FormRequest
 {
     public const SCENE_LIST = 'list';
@@ -24,7 +23,7 @@ class FeedbackRequest extends FormRequest
     public const SCENE_DELETE = 'delete';
 
     public array $scenes = [
-        'feedback' => ['content', 'question_medias'],
+        'feedback' => ['content', 'question_medias', 'phone', 'type'],
     ];
 
     /**
@@ -44,9 +43,8 @@ class FeedbackRequest extends FormRequest
         return [
             'content' => ['required', 'max:300'],
             'question_medias' => ['array'],
-            'delete_id' => [
-                'required', Rule::exists('enshrines', 'id')->where('user_id', $userId),
-            ],
+            'phone' => ['nullable', 'regex:/^1[34578]\d{9}$/',],
+            'type' => ['required', Rule::in([Feedback::FEEDBACK_TYPE_ADVICE, Feedback::FEEDBACK_TYPE_OTHER, Feedback::FEEDBACK_TYPE_PROGRAM, Feedback::FEEDBACK_TYPE_INFO_MISS])]
         ];
     }
 
@@ -56,6 +54,7 @@ class FeedbackRequest extends FormRequest
             'user_id' => '反馈用户',
             'content' => '反馈的问题',
             'question_medias' => '反馈的问题媒体',
+            'phone' => '手机号'
         ];
     }
 
@@ -74,38 +73,13 @@ class FeedbackRequest extends FormRequest
         $userId = $this->getRequest()->getAttribute('userId');
         $feedback = new Feedback();
         $feedback->user_id = $userId;
+        $feedback->type = $validatedData['type'];
+        $feedback->phone = $validatedData['phone'];
         $feedback->content = $validatedData['content'];
         $feedback->question_medias = $validatedData['question_medias'];
         if ($feedback->save()) {
             return $feedback->id;
         }
         throw new BusinessException(500, '反馈问题失败');
-    }
-
-    /**
-     * 查看问题.
-     */
-    public function deleteEnshrine()
-    {
-        $validatedData = $this->validated();
-        $delete_id = $validatedData['delete_id'];
-        if (Enshrine::destroy($delete_id)) {
-            return $delete_id;
-        }
-        throw new BusinessException(500, '取消收藏失败');
-    }
-
-    /**
-     * 收藏列表.
-     */
-    public function getList()
-    {
-        $userId = $this->getRequest()->getAttribute('userId');
-        $query = Enshrine::where([['user_id', $userId], ['type', $this->validationData()['type']]])->orderBy('id', 'desc');
-        $results = $query->paginate(10);
-        $results->each(function ($enshrine) {
-            $enshrine->append(['show_item', 'default_url']);
-        });
-        return $results;
     }
 }

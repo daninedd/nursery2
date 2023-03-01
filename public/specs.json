@@ -1,0 +1,1176 @@
+[
+  {
+    "id": 4,
+    "name": "草坪草籽",
+    "specs": {
+      "show": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": []
+    }
+  },
+  {
+    "id": 5,
+    "name": "地被",
+    "specs": {
+      "show": [
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "栽培状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 2,
+          "values": [
+            {
+              "text": "地栽苗",
+              "value": 1
+            },
+            {
+              "text": "容器苗",
+              "value": 2
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "苗龄",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "一年生",
+              "value": 1
+            },
+            {
+              "text": "两年生",
+              "value": 2
+            },
+            {
+              "text": "多年生",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "name": "灌木",
+    "specs": {
+      "show": [
+        {
+          "label": "杆径",
+          "unit": "公分",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "种植状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 1,
+          "values": [
+            {
+              "text": "原生苗",
+              "value": 1
+            },
+            {
+              "text": "断根苗",
+              "value": 2
+            },
+            {
+              "text": "移栽苗",
+              "value": 3
+            },
+            {
+              "text": "容器苗",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "树形",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "伞型",
+              "value": 1
+            },
+            {
+              "text": "塔型",
+              "value": 2
+            },
+            {
+              "text": "卵形",
+              "value": 3
+            },
+            {
+              "text": "柱型",
+              "value": 4
+            },
+            {
+              "text": "自然型",
+              "value": 5
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "苗木形态",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "单杆",
+              "value": 1
+            },
+            {
+              "text": "丛生",
+              "value": 2
+            },
+            {
+              "text": "嫁接苗",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "name": "爬藤植物",
+    "specs": {
+      "show": [
+        {
+          "label": "杆径",
+          "unit": "公分",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "主蔓长度",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "种植状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 1,
+          "values": [
+            {
+              "text": "地栽苗",
+              "value": 1
+            },
+            {
+              "text": "容器苗",
+              "value": 2
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "name": "乔木",
+    "specs": {
+      "show": [
+        {
+          "label": "杆径",
+          "unit": "公分",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "种植状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 1,
+          "values": [
+            {
+              "text": "原生苗",
+              "value": 1
+            },
+            {
+              "text": "断根苗",
+              "value": 2
+            },
+            {
+              "text": "移栽苗",
+              "value": 3
+            },
+            {
+              "text": "容器苗",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "树形",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "伞型",
+              "value": 1
+            },
+            {
+              "text": "塔型",
+              "value": 2
+            },
+            {
+              "text": "卵形",
+              "value": 3
+            },
+            {
+              "text": "柱型",
+              "value": 4
+            },
+            {
+              "text": "自然型",
+              "value": 5
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "苗木形态",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "单杆",
+              "value": 1
+            },
+            {
+              "text": "丛生",
+              "value": 2
+            },
+            {
+              "text": "嫁接苗",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  },
+  {
+    "id": 9,
+    "name": "苏铁类",
+    "specs": {
+      "show": [
+        {
+          "label": "杆径",
+          "unit": "公分",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "裸杆高",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "种植状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 1,
+          "values": [
+            {
+              "text": "地栽苗",
+              "value": 1
+            },
+            {
+              "text": "容器苗",
+              "value": 2
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  },
+  {
+    "id": 10,
+    "name": "水生植物",
+    "specs": {
+      "show": [
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "种植状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 1,
+          "values": [
+            {
+              "text": "原生苗",
+              "value": 1
+            },
+            {
+              "text": "容器苗",
+              "value": 2
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  },
+  {
+    "id": 12,
+    "name": "造型树桩盆景",
+    "specs": {
+      "show": [
+        {
+          "label": "杆径",
+          "unit": "公分",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "种植状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 1,
+          "values": [
+            {
+              "text": "原生苗",
+              "value": 1
+            },
+            {
+              "text": "容器苗",
+              "value": 2
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "树冠",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "全冠",
+              "value": 1
+            },
+            {
+              "text": "半冠",
+              "value": 2
+            },
+            {
+              "text": "骨架",
+              "value": 3
+            },
+            {
+              "text": "截杆",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "树形",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "伞型",
+              "value": 1
+            },
+            {
+              "text": "塔型",
+              "value": 2
+            },
+            {
+              "text": "卵形",
+              "value": 3
+            },
+            {
+              "text": "柱型",
+              "value": 4
+            },
+            {
+              "text": "自然型",
+              "value": 5
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "分支点",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        }
+      ]
+    }
+  },
+  {
+    "id": 13,
+    "name": "竹类",
+    "specs": {
+      "show": [
+        {
+          "label": "杆径",
+          "unit": "公分",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": false,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "种植状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 1,
+          "values": [
+            {
+              "text": "地栽苗",
+              "value": 1
+            },
+            {
+              "text": "容器苗",
+              "value": 2
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  },
+  {
+    "id": 14,
+    "name": "工程小苗",
+    "specs": {
+      "show": [
+        {
+          "label": "高度",
+          "unit": "厘米",
+          "required": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "冠幅",
+          "unit": "厘米",
+          "required": true,
+          "section": true,
+          "value1": "",
+          "value2": "",
+          "type": "multi_input"
+        },
+        {
+          "label": "栽培状态",
+          "unit": "",
+          "required": true,
+          "section": false,
+          "value": 2,
+          "values": [
+            {
+              "text": "地栽苗",
+              "value": 1
+            },
+            {
+              "text": "容器苗",
+              "value": 2
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ],
+      "hiddens": [
+        {
+          "label": "品质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "精品",
+              "value": 1
+            },
+            {
+              "text": "一般",
+              "value": 2
+            },
+            {
+              "text": "较差",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "苗龄",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "value": 0,
+          "values": [
+            {
+              "text": "一年生",
+              "value": 1
+            },
+            {
+              "text": "两年生",
+              "value": 2
+            },
+            {
+              "text": "多年生",
+              "value": 3
+            }
+          ],
+          "type": "data_check_box"
+        },
+        {
+          "label": "土质",
+          "unit": "",
+          "required": false,
+          "section": false,
+          "values": [
+            {
+              "text": "黑土",
+              "value": 1
+            },
+            {
+              "text": "黄土",
+              "value": 2
+            },
+            {
+              "text": "沙土",
+              "value": 3
+            },
+            {
+              "text": "营养土",
+              "value": 4
+            }
+          ],
+          "type": "data_check_box"
+        }
+      ]
+    }
+  }
+]

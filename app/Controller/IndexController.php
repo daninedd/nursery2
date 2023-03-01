@@ -15,6 +15,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middlewares;
 
 #[Controller]
+#[Middlewares([JwtAuthMiddleware::class])]
 class IndexController extends AbstractController
 {
     public const IP = 'http://192.168.31.48:9501';
@@ -28,6 +29,14 @@ class IndexController extends AbstractController
             ['id' => 3, 'src' => 'url3', 'url' => self::IP . '/static/images/3.jpg'],
             ['id' => 4, 'src' => 'url4', 'url' => self::IP . '/static/images/4.jpg'],
         ];
+        return $this->success($data);
+    }
+
+    #[GetMapping(path: 'getSpecs')]
+    public function getSpecs()
+    {
+        $data = file_get_contents('./public/specs.json');
+        $data = json_decode($data, true);
         return $this->success($data);
     }
 

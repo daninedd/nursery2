@@ -5,6 +5,7 @@ declare(strict_types=1);
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
  */
+
 namespace App\Model;
 
 /**
@@ -19,10 +20,17 @@ namespace App\Model;
  * @property int $is_adopt 是否采用
  * @property string $question_medias 问题截图
  * @property string $reply_medias 回复图片
+ * @property string $phone 联系方式
+ * @property string $type 信息错误/缺失:info_miss 功能建议:advice 程序问题:program 其他问题:other
  * @property User $getUser
  */
 class Feedback extends Model
 {
+    const FEEDBACK_TYPE_INFO_MISS = 'info_miss';
+    const FEEDBACK_TYPE_ADVICE = 'advice';
+    const FEEDBACK_TYPE_PROGRAM = 'program';
+    const FEEDBACK_TYPE_OTHER = 'other';
+
     /**
      * The table associated with the model.
      *

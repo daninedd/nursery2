@@ -39,19 +39,22 @@ class PurchaseRequest extends FormRequest
 
     public const SCENE_RE_UP = 're_up';
 
+    public const SCENE_DELETE_PURCHASE = 'delete_purchase';
+
     protected const MUST_HAVE = ['must_have_price', 'must_have_addr', 'must_have_image'];
 
     public array $scenes = [
         self::SCENE_ADD => ['title', 'productId', 'catedgoryId', 'target_price', 'specs', 'unit',
-            'price_type', 'address', 'media', 'remark', 'num', 'must_have', 'expire_at', 'push_status'],
-        self::SCENE_EDIT => ['id', 'title', 'target_price', 'specs', 'unit', 'expire_at', 'must_have',
-            'price_type', 'address', 'media', 'remark', 'num', 'push_status'],
+            'price_type', 'address', 'media', 'remark', 'num', 'must_have', 'expire_at'],
+        self::SCENE_EDIT => ['id', 'target_price', 'specs', 'unit', 'expire_at', 'must_have',
+            'price_type', 'address', 'media', 'remark', 'num'],
         self::SCENE_DETAIL => ['id'],
         self::SCENE_OFFER => ['purchase_id', 'offerPrice', 'offerPhone', 'offerMedia', 'offerAddress', 'remark'],
         self::SCENE_LIST => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'],
-        self::SCENE_USER_PURCHASE_LIST => ['push_status'],
+        self::SCENE_USER_PURCHASE_LIST => ['is_expired'],
         self::SCENE_END_PURCHASE => ['end_purchase_id'],
         self::SCENE_RE_UP => ['re_up_id'],
+        self::SCENE_DELETE_PURCHASE => ['delete_id'],
     ];
 
     /**
@@ -69,6 +72,9 @@ class PurchaseRequest extends FormRequest
     {
         $userId = $this->getRequest()->getAttribute('userId');
         $rules = [
+            'delete_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
+                $query->where('user_id', $userId);
+            })],
             're_up_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
                 $query->where('user_id', $userId);
             })],
@@ -77,7 +83,10 @@ class PurchaseRequest extends FormRequest
                 if (empty($purchase)){
                     $fail("未找到求购详情");
                 }
-                if ($userId != $purchase->user_id && $purchase->push_status != Purchase::PUSH_STATUS_ENABLE){
+                if ($purchase->deleted_at){
+                    $fail('求购已过期或被删除');
+                }
+                if ($userId != $purchase->user_id && $purchase->is_expired){
                     $fail("求购详情不存在~");
                 }
             }],
@@ -114,7 +123,7 @@ class PurchaseRequest extends FormRequest
             'must_have' => ['array', Rule::in(self::MUST_HAVE)],
             'offerPhone' => ['required', 'regex:/^1[3456789]\d{9}$/'],
             'keyword' => 'present|max:10',
-            'push_status' => ['required', Rule::in([Purchase::PUSH_STATUS_DISABLE, Purchase::PUSH_STATUS_ENABLE])],
+            'is_expired' => ['required', Rule::in([Purchase::IS_EXPIRED, Purchase::NOT_EXPIRED])],
             'order1' => [Rule::in(['asc', 'desc'])],
             'order2' => [Rule::in(['asc', 'desc'])],
             'order3' => [Rule::in(['asc', 'desc'])],
@@ -191,7 +200,7 @@ class PurchaseRequest extends FormRequest
         $purchase->target_price = $data['target_price'];
         $purchase->price_type = $data['price_type'];
         $purchase->unit = $data['unit'];
-        $purchase->push_status = $data['push_status'];
+        $purchase->push_status = Purchase::PUSH_STATUS_ENABLE;
         $purchase->recommend_status = 0;
         $purchase->verify_status = 1;
         $purchase->remark = $data['remark'];
@@ -214,12 +223,11 @@ class PurchaseRequest extends FormRequest
     {
         $data = $this->validated();
         $purchase = Purchase::findFromCache($data['id']);
-        $purchase->title = $data['title'];
         $purchase->medias = $this->formatMedia($data['media']);
         $purchase->specs = $this->formatSpecs($data['specs']);
         $purchase->target_price = $data['target_price'];
         $purchase->price_type = $data['price_type'];
-        $purchase->push_status = $data['push_status'];
+        $purchase->push_status = Purchase::PUSH_STATUS_ENABLE;
         $purchase->remark = $data['remark'];
         $purchase->num = $data['num'];
         $purchase->address = $data['address'];
@@ -251,6 +259,14 @@ class PurchaseRequest extends FormRequest
         $data = Purchase::findFromCache($data['end_purchase_id']);
         $data->expire_at = date('Y-m-d');
         return $data->save();
+    }
+
+    /** 删除求购 */
+    public function deletePurchase()
+    {
+        $data = $this->validated();
+        $data = Purchase::findFromCache($data['delete_id']);
+        return $data->delete();
     }
 
     /**
@@ -380,7 +396,7 @@ class PurchaseRequest extends FormRequest
                 $query->orderBy('created_at', $validatedData['order3']);
             }
         }
-        $query->orderByRaw('sort desc, created_at desc');
+        $query->orderByRaw('sort desc, expire_at desc');
         return $query->paginate(10);
     }
 
@@ -388,13 +404,13 @@ class PurchaseRequest extends FormRequest
     {
         $validatedData = $this->validated();
         $userId = $this->getRequest()->getAttribute('userId');
-        $pushStatus = $validatedData['push_status'];
+        $isExpired = $validatedData['is_expired'];
         $query = Purchase::query()->where([['user_id', $userId], ['deleted_at', null]]);
         $today = date('Y-m-d');
-        if ($pushStatus) {
-            $query->where('expire_at', '>', $today);
-        } else {
+        if ($isExpired) {
             $query->where('expire_at', '<=', $today);
+        } else {
+            $query->where('expire_at', '>', $today);
         }
         $query->orderBy('id', 'DESC');
         /** @var LengthAwarePaginator $results */
@@ -412,11 +428,11 @@ class PurchaseRequest extends FormRequest
     {
         $data = $this->validated();
         $purchase = Purchase::findFromCache($data['re_up_id']);
-        $update = ['push_status' => Purchase::PUSH_STATUS_ENABLE];
-        if(Carbon::today()->gt($purchase->expire_at)){
-            $update['expire_at'] = Carbon::now()->addDays(7)->format('Y-m-d');
+        $purchase->push_status = Purchase::PUSH_STATUS_ENABLE;
+        if(Carbon::today()->gte($purchase->expire_at)){
+            $purchase->expire_at = Carbon::now()->addDays(7)->format('Y-m-d');
         }
-        return Purchase::query()->update($update, [['id' => $data['re_up_id']]]);
+        return $purchase->save();
     }
 
     protected function formatMedia($media): array
