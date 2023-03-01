@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Carbon\Carbon;
+use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\ModelCache\Cacheable;
 use Hyperf\Snowflake\Concern\Snowflake;
@@ -54,10 +55,15 @@ class Purchase extends Model
 {
     use Snowflake;
     use Cacheable;
+    use SoftDeletes;
 
     public const PUSH_STATUS_ENABLE = 1;
 
     public const PUSH_STATUS_DISABLE = 0;
+
+    public const IS_EXPIRED = 1;
+
+    public const NOT_EXPIRED = 0;
 
     /**
      * The table associated with the model.

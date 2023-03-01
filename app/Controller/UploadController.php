@@ -49,6 +49,9 @@ class UploadController extends AbstractController
             case 'message':
                 $path = '/nursery/message';
                 break;
+            case 'feedback':
+                $path = '/nursery/feedback';
+                break;
             default:
                 $path = '/nursery/products';
         }

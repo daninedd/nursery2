@@ -20,7 +20,7 @@ use Hyperf\HttpServer\Contract\ResponseInterface;
 class FeedbackController extends AbstractController
 {
     /**
-     *收藏.
+     *问题反馈.
      */
     #[PostMapping(path: 'feedback')]
     public function feedback()
@@ -30,10 +30,5 @@ class FeedbackController extends AbstractController
         $request->validateResolved();
         $data = $request->feedback();
         return $this->success($data);
-    }
-
-    public function index(RequestInterface $request, ResponseInterface $response)
-    {
-        return $response->raw('Hello Hyperf!');
     }
 }

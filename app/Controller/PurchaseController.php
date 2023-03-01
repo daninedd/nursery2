@@ -134,4 +134,17 @@ class PurchaseController extends AbstractController
         $data = $request->reUp();
         return $this->success($data);
     }
+
+    /**
+     * 删除求购.
+     */
+    #[PostMapping(path: 'deletePurchase')]
+    public function deletePurchase(): \Psr\Http\Message\ResponseInterface
+    {
+        $request = $this->container->get(PurchaseRequest::class);
+        $request->scene(PurchaseRequest::SCENE_DELETE_PURCHASE);
+        $request->validateResolved();
+        $data = $request->deletePurchase();
+        return $this->success($data);
+    }
 }
