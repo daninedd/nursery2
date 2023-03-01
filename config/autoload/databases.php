@@ -2,24 +2,20 @@
 
 declare(strict_types=1);
 /**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
+ * This file is part of Nursery2.
+ * @author    denglei@4587@163.com
  */
 return [
     'default' => [
         'driver' => env('DB_DRIVER', 'mysql'),
         'host' => env('DB_HOST', 'localhost'),
         'port' => env('DB_PORT', 3306),
-        'database' => env('DB_DATABASE', 'hyperf'),
+        'database' => env('DB_DATABASE', 'nursery2'),
         'username' => env('DB_USERNAME', 'root'),
-        'password' => env('DB_PASSWORD', ''),
+        'password' => env('DB_PASSWORD', 'root'),
         'charset' => env('DB_CHARSET', 'utf8mb4'),
         'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
-        'prefix' => env('DB_PREFIX', ''),
+        'prefix' => env('DB_PREFIX', 'ns_'),
         'pool' => [
             'min_connections' => 1,
             'max_connections' => 10,
@@ -39,10 +35,11 @@ return [
         'commands' => [
             'gen:model' => [
                 'path' => 'app/Model',
-                'force_casts' => true,
+                'force_casts' => false,
                 'inheritance' => 'Model',
                 'uses' => '',
                 'table_mapping' => [],
+                'with-comments' => true,
             ],
         ],
     ],

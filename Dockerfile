@@ -6,7 +6,7 @@
 # @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
 
 FROM hyperf/hyperf:8.0-alpine-v3.12-swoole
-LABEL maintainer="Hyperf Developers <group@hyperf.io>" version="1.0" license="MIT" app.name="Hyperf"
+LABEL maintainer="Hyperf Developers <group@hyperf.io>" version="1.0" license="MIT" app.name="Nursery2"
 
 ##
 # ---------- env settings ----------
@@ -17,6 +17,14 @@ ARG timezone
 ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
     APP_ENV=prod \
     SCAN_CACHEABLE=(true)
+
+# mongodb
+# RUN apk add --no-cache $PHPIZE_DEPS \
+# && pecl install mongodb \
+# && echo "extension=mongodb.so" > /etc/php8/conf.d/mongodb.ini
+
+RUN apk add --no-cache \
+    php-mongodb
 
 # update
 RUN set -ex \
