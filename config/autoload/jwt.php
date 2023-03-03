@@ -21,8 +21,8 @@ return [
      * 正则写法：["**", "/api/{name:.+}"]  支持模块化不做jwt token的校验，例如：/api/login/login
      */
     'no_check_route' => [
-        ['post', '/user/wxLogin',],
-        ['get', '/index/banner', ],
+        ['post', '/user/wxLogin'],
+        ['get', '/index/banner'],
         ['get', '/index/getSpecs'],
     ],
 

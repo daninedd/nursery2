@@ -8,23 +8,19 @@ declare(strict_types=1);
 namespace App\Request;
 
 use App\Exception\BusinessException;
-use App\Model\Address;
-use App\Model\Category;
-use App\Model\Product;
 use App\Model\Purchase;
 use App\Model\Supply;
 use App\Model\User;
-use Carbon\Carbon;
 use Hyperf\Cache\Cache;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Di\Annotation\Inject;
-use Hyperf\Paginator\LengthAwarePaginator;
 use Hyperf\Validation\Request\FormRequest;
 use Hyperf\Validation\Rule;
 
 class SearchRequest extends FormRequest
 {
     public const SCENE_SEARCH = 'search';
+
     public const SCENE_GET_HOT_SEARCH = 'get_hot_search';
 
     public array $scenes = [
@@ -67,7 +63,7 @@ class SearchRequest extends FormRequest
     {
         $validateData = $this->validated();
         $keyword = $validateData['keyword'];
-        if ($validateData['type'] == 'supply'){
+        if ($validateData['type'] == 'supply') {
             $query = Supply::query()->where([['push_status', Supply::PUSH_STATUS_ENABLE], ['deleted_at', null]]);
             $query->where(function (Builder $q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
@@ -75,9 +71,10 @@ class SearchRequest extends FormRequest
             });
             $query->orderBy('updated_at', 'DESC');
             return $query->paginate(20);
-        }elseif ($validateData['type'] == 'purchase'){
-            //todo 修改时间
-            //['expire_at', '<', date('Y-m-d')]
+        }
+        if ($validateData['type'] == 'purchase') {
+            // todo 修改时间
+            // ['expire_at', '<', date('Y-m-d')]
             $query = Purchase::query()->where([['push_status', Purchase::PUSH_STATUS_ENABLE], ['deleted_at', null]]);
             $query->where(function (Builder $q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
@@ -88,7 +85,6 @@ class SearchRequest extends FormRequest
         }
         throw new BusinessException(500, '查询失败');
     }
-
 
     /**
      * 获取热搜词.
