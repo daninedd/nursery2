@@ -1,36 +1,43 @@
-# Introduction
+# 基于Hyperf框架开发的接口项目
 
-This is a skeleton application using the Hyperf framework. This application is meant to be used as a starting place for those looking to get their feet wet with Hyperf Framework.
+一个基于hyperf的框架开发的项目  
+1.用户登录、注销  
+2.创建、编辑供应、求购  
+3.图片上传  
+4.在线聊天  
+5.问题反馈  
 
-# Requirements
-
-Hyperf has some requirements for the system environment, it can only run under Linux and Mac environment, but due to the development of Docker virtualization technology, Docker for Windows can also be used as the running environment under Windows.
-
-The various versions of Dockerfile have been prepared for you in the [hyperf/hyperf-docker](https://github.com/hyperf/hyperf-docker) project, or directly based on the already built [hyperf/hyperf](https://hub.docker.com/r/hyperf/hyperf) Image to run.
-
-When you don't want to use Docker as the basis for your running environment, you need to make sure that your operating environment meets the following requirements:  
-
- - PHP >= 7.3
- - Swoole PHP extension >= 4.5，and Disabled `Short Name`
+# 需要的扩展
+ - PHP >= 8.0
+ - Swoole PHP extension >= 4.5，禁用 `Short Name`
  - OpenSSL PHP extension
  - JSON PHP extension
- - PDO PHP extension （If you need to use MySQL Client）
- - Redis PHP extension （If you need to use Redis Client）
- - Protobuf PHP extension （If you need to use gRPC Server of Client）
+ - PDO PHP extension
+ - Redis PHP extension
+ - Mongodb PHP extension
 
-# Installation using Composer
+# 部署方式
 
-The easiest way to create a new Hyperf project is to use Composer. If you don't have it already installed, then please install as per the documentation.
+- ## docker-compose部署
+-   #### 因为没有vendor文件夹、所以需要创建一个容器来手动composer install
+1. git clone git@github.com:daninedd/nursery2.git
+2. docker run --name hyperf \
+  -v /home/nursery2:/data/project \
+  -p 9501:9501 -it \
+  --privileged -u root \
+  --entrypoint /bin/sh \
+  hyperf/hyperf:8.0-alpine-v3.15-swoole
 
-To create your new Hyperf project:
+- #### 官方的镜像默认没有安装mongodb的扩展，所以我们需要自己装mongodb的扩展才能composer install
+3. RUN apk add --no-cache $PHPIZE_DEPS
+4. pecl8 install mongodb
+5. composer install
 
-$ composer create-project hyperf/hyperf-skeleton path/to/install
+6. 项目里出现vendor文件夹，然后退出、删除刚刚创建的容器
 
-Once installed, you can run the server immediately using the command below.
+### 部署全部项目
 
-$ cd path/to/install
-$ php bin/hyperf.php start
+`docker compose build` #拷贝.env.example 为.env 修改为自己的配置  
+`docker compose up`
+进入api容器执行 php bin/hyperf migrate --seed
 
-This will start the cli-server on port `9501`, and bind it to all network interfaces. You can then visit the site at `http://localhost:9501/`
-
-which will bring up Hyperf default home page.
