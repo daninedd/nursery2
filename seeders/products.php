@@ -1,23 +1,24 @@
 <?php
 
 declare(strict_types=1);
-
+/**
+ * This file is part of Nursery2.
+ * @author    denglei@4587@163.com
+ */
 use Hyperf\Database\Seeders\Seeder;
 
 class Products extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run()
     {
         $datas = file_get_contents('./seeders/products.json');
-        $datas = json_decode($datas,true);
+        $datas = json_decode($datas, true);
         $insert = [];
-        foreach ($datas as $value){
-            $insert []= [
+        foreach ($datas as $value) {
+            $insert[] = [
                 'name' => $value['name'],
                 'nick_name' => $value['nick_name'],
                 'sku' => $value['sku'],
