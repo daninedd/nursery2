@@ -1,0 +1,63 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/opt/www
+    env_file: ./.env.prod
+    ports:
+      - "9501:9501"
+      - "9502:9502"
+    depends_on:
+      - redis
+      - mongo
+      - mysql
+    links:
+      - "redis:redis"
+      - "mongo:mongo"
+      - "mysql:mysql"
+  redis:
+    image: redis
+    ports:
+       - "6378:6379"
+    volumes:
+      - ~/ns/redis/data:/data
+    command: "--requirepass $REDIS_AUTH"
+    environment:
+      - TZ=Asia/Shanghai
+  mongo:
+    image: mongo:6.0.1
+    ports:
+      - "27016:27017"
+    environment:
+      - TZ=Asia/Shanghai
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=Welcome1++
+      - MONGO_INITDB_DATABASE=nursery
+    volumes:
+      - ~/ns/mongo/data/db:/data/db
+      - ~/ns/mongo/data/log:/var/log/mongo
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=Welcome1++
+      - MYSQL_DATABASE=nursery2
+      - TZ=Asia/Shanghai
+    ports:
+      - "3305:3306"
+    volumes:
+      - ~/ns/mysql/db_data:/var/lib/mysql
+      - ./data/init_mysql.sql:/docker-entrypoint-initdb.d/init_mysql.sql
+    security_opt:
+      - seccomp:unconfined
+  nginx:
+    image: nginx:latest
+    ports:
+      - "9999:80"
+      - "9998:8081"
+    volumes:
+      - ./data/nginx/conf.d:/etc/nginx/conf.d
+    links:
+      - "api:nursery"

@@ -46,7 +46,7 @@ class SupplyRequest extends FormRequest
         'list' => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'], // order1:供应状态,order2:浏览次数,3:发布时间
         'user_supply_list' => ['push_status'],
         'refresh_supply' => ['supply_id'],
-        self::SCENE_RECOMMEND_LIST => ['id']
+        self::SCENE_RECOMMEND_LIST => ['id'],
     ];
 
     #[Inject]
@@ -296,7 +296,6 @@ class SupplyRequest extends FormRequest
         $query->orderByRaw('sort desc, created_at desc');
         return $query->paginate(20);
     }
-
 
     /** 获取推荐列表 */
     public function getRecommedList()

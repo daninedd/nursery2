@@ -16,7 +16,7 @@ ARG timezone
 
 ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
     APP_ENV=prod \
-    SCAN_CACHEABLE=(true)
+    SCAN_CACHEABLE=(false)
 
 # mongodb
 # RUN apk add --no-cache $PHPIZE_DEPS \
@@ -58,5 +58,6 @@ COPY . /opt/www
 RUN composer install --no-dev -o && php bin/hyperf.php
 
 EXPOSE 9501
+EXPOSE 9502
 
 ENTRYPOINT ["php", "/opt/www/bin/hyperf.php", "start"]

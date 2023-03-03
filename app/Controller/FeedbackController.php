@@ -12,8 +12,6 @@ use App\Request\FeedbackRequest;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PostMapping;
-use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\HttpServer\Contract\ResponseInterface;
 
 #[Controller]
 #[Middlewares([JwtAuthMiddleware::class])]

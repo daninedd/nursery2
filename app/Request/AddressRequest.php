@@ -65,6 +65,25 @@ class AddressRequest extends FormRequest
             $res[] = $province;
         }
         return $res;
-        $response = [];
+    }
+
+    public function addList()
+    {
+        $address = Address::query()->with(['children.children'])->where(['parent_id' => 0])->get();
+        $res = [];
+        foreach ($address as $k => $addr) {
+            $province = ['text' => $addr->name, 'value' => $addr->id, 'children' => []];
+            foreach ($addr->children as $cities) {
+                $city = ['text' => $cities->name, 'value' => $cities->id, 'children' => []];
+                $province['children'][] = $city;
+                $last_arr_index = count($province['children']) - 1;
+                // $province['submenu'][$last_arr_index]['submenu'][] = [];
+                foreach ($cities->children as $district) {
+                    $province['children'][$last_arr_index]['children'][] = ['text' => $district->name, 'value' => $district->id];
+                }
+            }
+            $res[] = $province;
+        }
+        return $res;
     }
 }

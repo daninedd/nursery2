@@ -80,14 +80,14 @@ class PurchaseRequest extends FormRequest
             })],
             'id' => ['required', function ($attr, $value, $fail) use ($userId) {
                 $purchase = Purchase::findFromCache($value);
-                if (empty($purchase)){
-                    $fail("未找到求购详情");
+                if (empty($purchase)) {
+                    $fail('未找到求购详情');
                 }
-                if ($purchase->deleted_at){
+                if ($purchase->deleted_at) {
                     $fail('求购已过期或被删除');
                 }
-                if ($userId != $purchase->user_id && $purchase->is_expired){
-                    $fail("求购详情不存在~");
+                if ($userId != $purchase->user_id && $purchase->is_expired) {
+                    $fail('求购详情不存在~');
                 }
             }],
             'end_purchase_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
@@ -99,8 +99,10 @@ class PurchaseRequest extends FormRequest
                 $query->where('user_id', '<>', $userId);
             }), function ($attr, $value, $fail) use ($userId) {
                 $offer = UserOffer::where([['purchase_id', $value], ['user_id', $userId]])->exists();
-                if ($offer) {$fail('您已经报过价了');}
-            }
+                if ($offer) {
+                    $fail('您已经报过价了');
+                }
+            },
             ],
             'title' => 'required|max:32',
             'productId' => ['present', 'int', function ($attr, $value, $fail) {
@@ -429,7 +431,7 @@ class PurchaseRequest extends FormRequest
         $data = $this->validated();
         $purchase = Purchase::findFromCache($data['re_up_id']);
         $purchase->push_status = Purchase::PUSH_STATUS_ENABLE;
-        if(Carbon::today()->gte($purchase->expire_at)){
+        if (Carbon::today()->gte($purchase->expire_at)) {
             $purchase->expire_at = Carbon::now()->addDays(7)->format('Y-m-d');
         }
         return $purchase->save();
