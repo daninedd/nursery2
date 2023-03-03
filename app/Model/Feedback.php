@@ -5,7 +5,6 @@ declare(strict_types=1);
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
  */
-
 namespace App\Model;
 
 /**
@@ -26,10 +25,13 @@ namespace App\Model;
  */
 class Feedback extends Model
 {
-    const FEEDBACK_TYPE_INFO_MISS = 'info_miss';
-    const FEEDBACK_TYPE_ADVICE = 'advice';
-    const FEEDBACK_TYPE_PROGRAM = 'program';
-    const FEEDBACK_TYPE_OTHER = 'other';
+    public const FEEDBACK_TYPE_INFO_MISS = 'info_miss';
+
+    public const FEEDBACK_TYPE_ADVICE = 'advice';
+
+    public const FEEDBACK_TYPE_PROGRAM = 'program';
+
+    public const FEEDBACK_TYPE_OTHER = 'other';
 
     /**
      * The table associated with the model.

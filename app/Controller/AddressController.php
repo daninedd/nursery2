@@ -18,12 +18,22 @@ use Hyperf\HttpServer\Annotation\Middlewares;
 class AddressController extends AbstractController
 {
     /**
-     *收藏.
+     *区域列表.
      */
     #[GetMapping(path: 'list')]
     public function list()
     {
         $request = $this->container->get(AddressRequest::class);
         return $this->success($request->list());
+    }
+
+    /**
+     *添加时选择的区域列表.
+     */
+    #[GetMapping(path: 'addList')]
+    public function addList()
+    {
+        $request = $this->container->get(AddressRequest::class);
+        return $this->success($request->addList());
     }
 }
