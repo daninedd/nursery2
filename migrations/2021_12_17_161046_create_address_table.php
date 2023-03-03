@@ -17,6 +17,7 @@ class CreateAddressTable extends Migration
     public function up(): void
     {
         Schema::create('address', function (Blueprint $table) {
+            $table->comment('地区表');
             $table->bigIncrements('id');
             $table->string('code', 50)->default(0)->comment('区域代码');
             $table->string('name', 40)->default('')->comment('名称');

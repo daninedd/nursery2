@@ -17,10 +17,11 @@ class CreateProductsTable extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
+            $table->comment('产品表');
             $table->bigIncrements('id');
             $table->string('name', 32)->default('')->comment('产品名称');
             $table->string('nick_name', 32)->default('')->comment('产品简称');
-            $table->string('sku', 32)->default('')->comment('SKU');
+            $table->string('sku', 64)->default('')->comment('SKU');
             $table->json('images')->nullable()->comment('图片集合');
             $table->json('tags')->nullable()->comment('产品标签');
             $table->unsignedBigInteger('category_id')->default(0)->comment('分类id');

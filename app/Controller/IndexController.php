@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Middleware\JwtAuthMiddleware;
-use App\Request\PurchaseRequest;
 use App\Request\SearchRequest;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -40,7 +39,6 @@ class IndexController extends AbstractController
         return $this->success($data);
     }
 
-
     /**
      *搜索接口.
      */
@@ -66,6 +64,7 @@ class IndexController extends AbstractController
         $data = $request->getHotSearch();
         return $this->success($data);
     }
+
     public function supplyDetail()
     {
         $id = $this->request->input('id');

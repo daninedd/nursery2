@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace App\Request;
 
 use App\Exception\BusinessException;
-use App\Model\Enshrine;
 use App\Model\Feedback;
 use App\Model\User;
 use Hyperf\Validation\Request\FormRequest;
@@ -43,8 +42,8 @@ class FeedbackRequest extends FormRequest
         return [
             'content' => ['required', 'max:300'],
             'question_medias' => ['array'],
-            'phone' => ['nullable', 'regex:/^1[34578]\d{9}$/',],
-            'type' => ['required', Rule::in([Feedback::FEEDBACK_TYPE_ADVICE, Feedback::FEEDBACK_TYPE_OTHER, Feedback::FEEDBACK_TYPE_PROGRAM, Feedback::FEEDBACK_TYPE_INFO_MISS])]
+            'phone' => ['nullable', 'regex:/^1[34578]\d{9}$/'],
+            'type' => ['required', Rule::in([Feedback::FEEDBACK_TYPE_ADVICE, Feedback::FEEDBACK_TYPE_OTHER, Feedback::FEEDBACK_TYPE_PROGRAM, Feedback::FEEDBACK_TYPE_INFO_MISS])],
         ];
     }
 
@@ -54,7 +53,7 @@ class FeedbackRequest extends FormRequest
             'user_id' => '反馈用户',
             'content' => '反馈的问题',
             'question_medias' => '反馈的问题媒体',
-            'phone' => '手机号'
+            'phone' => '手机号',
         ];
     }
 

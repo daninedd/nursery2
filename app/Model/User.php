@@ -86,6 +86,6 @@ class User extends Model implements Authenticatable
             $prefix = config('file.storage.oss.prefix');
             return $prefix . $this->avatar;
         }
-        return 'http://192.168.0.103:9501/static/images/defaultAvatar.png';
+        return env('STATIC_PREFIX') . '/static/images/defaultAvatar.png';
     }
 }
