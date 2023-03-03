@@ -17,6 +17,7 @@ class CreateProductsTable extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
+            $table->comment('产品表');
             $table->bigIncrements('id');
             $table->string('name', 32)->default('')->comment('产品名称');
             $table->string('nick_name', 32)->default('')->comment('产品简称');
