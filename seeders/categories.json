@@ -1,0 +1,112 @@
+[
+  {
+    "id": 4,
+    "created_at": "2021-10-22 17:14:36",
+    "updated_at": "2021-10-22 17:14:36",
+    "deleted_at": null,
+    "name": "草坪草籽",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 1,
+    "description": ""
+  },
+  {
+    "id": 5,
+    "created_at": "2021-10-22 17:15:05",
+    "updated_at": "2021-10-22 17:15:05",
+    "deleted_at": null,
+    "name": "地被",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 6,
+    "created_at": "2021-10-22 17:15:41",
+    "updated_at": "2021-10-22 17:15:41",
+    "deleted_at": null,
+    "name": "灌木",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 7,
+    "created_at": "2021-10-22 17:16:10",
+    "updated_at": "2021-10-29 14:10:42",
+    "deleted_at": null,
+    "name": "爬藤植物",
+    "parent_id": 0,
+    "icon": "uploads/file/202cb962ac59075b964b07152d234b70_20211029141040.jpg",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 8,
+    "created_at": "2021-10-22 17:16:25",
+    "updated_at": "2021-10-29 14:11:18",
+    "deleted_at": null,
+    "name": "乔木",
+    "parent_id": 0,
+    "icon": "uploads/file/202cb962ac59075b964b07152d234b70_20211029141117.jpg",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 9,
+    "created_at": "2021-10-22 17:16:41",
+    "updated_at": "2021-10-22 17:16:41",
+    "deleted_at": null,
+    "name": "苏铁类",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 10,
+    "created_at": "2021-10-22 17:17:01",
+    "updated_at": "2021-10-22 17:17:01",
+    "deleted_at": null,
+    "name": "水生植物",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 12,
+    "created_at": "2021-10-22 17:18:16",
+    "updated_at": "2021-10-22 17:18:16",
+    "deleted_at": null,
+    "name": "造型树桩盆景",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 13,
+    "created_at": "2021-10-22 17:18:32",
+    "updated_at": "2021-10-22 17:18:32",
+    "deleted_at": null,
+    "name": "竹类",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
+  },
+  {
+    "id": 14,
+    "created_at": "2021-10-22 17:19:02",
+    "updated_at": "2021-10-22 17:19:02",
+    "deleted_at": null,
+    "name": "工程小苗",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
+  }
+]
