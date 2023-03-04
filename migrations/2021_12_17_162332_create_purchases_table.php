@@ -42,7 +42,8 @@ class CreatePurchasesTable extends Migration
             $table->unsignedTinyInteger('must_have_price')->default(1)->comment('报价是否必填价格');
             $table->unsignedTinyInteger('must_have_image')->default(0)->comment('报价是否必填图片');
             $table->unsignedTinyInteger('must_have_addr')->default(0)->comment('报价是否必填地址');
-            $table->unsignedTinyInteger('offer_type')->default(1)->comment('1-上车价,2-地价');
+            $table->tinyInteger('unit')->default(1)->comment('单位 1:株,2:颗,3:丛,4:斤,5:吨,6:芽,7:个,8:两');
+            $table->unsignedTinyInteger('price_type')->default(1)->comment('1-上车价,2-到货价');
             $table->unsignedInteger('num')->default(1)->comment('求购数量');
             $table->json('address')->nullable()->comment('求购地址');
             $table->unsignedTinyInteger('access_offer')->default(0)->comment('1:已接受报价,2:未接受报价');

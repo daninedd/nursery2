@@ -21,17 +21,18 @@
 - ## docker-compose部署
 -   #### 因为没有vendor文件夹、所以需要创建一个容器来手动composer install
 1. git clone git@github.com:daninedd/nursery2.git
-2. docker run --name hyperf \
-  -v /home/nursery2:/data/project \
-  -p 9501:9501 -it \
-  --privileged -u root \
-  --entrypoint /bin/sh \
+2. docker run --name hyperf \\  
+  -v {宿主机的项目地址}:/data/project \\  
+  -p 9501:9501 -it \\  
+  --privileged -u root \\  
+  --entrypoint /bin/sh \\  
   hyperf/hyperf:8.0-alpine-v3.15-swoole
 
 - #### 官方的镜像默认没有安装mongodb的扩展，所以我们需要自己装mongodb的扩展才能composer install
-3. RUN apk add --no-cache $PHPIZE_DEPS
-4. pecl8 install mongodb
-5. composer install
+- `sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories`  
+3. `apk add --no-cache $PHPIZE_DEPS`
+4. `pecl8 install mongodb` # 然后extension=mongodb.so 写入到/etc/php8/php.ini里  
+5. 在/data/project目录下执行 `composer install`
 
 6. 项目里出现vendor文件夹，然后退出、删除刚刚创建的容器
 
