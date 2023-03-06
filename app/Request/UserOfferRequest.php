@@ -55,6 +55,7 @@ class UserOfferRequest extends FormRequest
                 $query->where([['purchase_id', $this->input('purchase_id')],
                     ['id', $this->input('offer_id')],
                     ['purchase_user_id', $userId],
+                    ['accept', UserOffer::NOT_ACCEPT],
                 ]);
             }), function ($attr, $value, $fail) {
                 if (UserOffer::where([['purchase_id', $this->input('purchase_id')], ['accept', UserOffer::ACCEPT]])->exists()) {

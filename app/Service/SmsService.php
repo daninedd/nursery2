@@ -12,7 +12,6 @@ use GuzzleHttp\Client;
 use Hyperf\Cache\Cache;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Logger\LoggerFactory;
-use Hyperf\Utils\Coroutine;
 use Overtrue\EasySms\EasySms;
 use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 

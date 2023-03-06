@@ -17,7 +17,6 @@ use Hyperf\HttpServer\Annotation\Middlewares;
 #[Middlewares([JwtAuthMiddleware::class])]
 class IndexController extends AbstractController
 {
-
     #[GetMapping(path: 'banner')]
     public function banner()
     {

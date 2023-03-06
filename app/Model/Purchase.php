@@ -144,6 +144,13 @@ class Purchase extends Model
         return Enshrine::where([['user_id', $user], ['type', Enshrine::TYPE_PURCHASE], ['item_id', $this->id]])->value('id');
     }
 
+    /** 是否报过价 */
+    public function getHasOfferAttribute()
+    {
+        $user = $this->getContainer()->get(RequestInterface::class)->getAttribute('userId');
+        return UserOffer::where([['user_id', $user], ['purchase_id', $this->id]])->value('id');
+    }
+
     public function getMustHaveAttribute($value)
     {
         $r = [];

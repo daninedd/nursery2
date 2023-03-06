@@ -133,7 +133,7 @@ class WebSocketController extends BaseNamespace
             // 推送消息
             $socket->to($sid)->emit('receiveMessage', array_merge(['message_id' => $messageId], $msg));
         }
-        return array_merge(['_id' => ['$oid' => $messageId]],['message_id' => $messageId], array_merge($msg, ['contact_avatar' => User::findFromCache($message['user_id'])->full_avatar]));
+        return array_merge(['_id' => ['$oid' => $messageId]], ['message_id' => $messageId], array_merge($msg, ['contact_avatar' => User::findFromCache($message['user_id'])->full_avatar]));
     }
 
     /**

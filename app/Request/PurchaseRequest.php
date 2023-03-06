@@ -247,7 +247,7 @@ class PurchaseRequest extends FormRequest
     {
         $data = $this->validated();
         $data = Purchase::with(['user:id,name,phone,avatar'])->find($data['id']);
-        $data->append(['has_enshrine']);
+        $data->append(['has_enshrine', 'has_offer']);
         if ($data->user_id == $this->getRequest()->getAttribute('userId')) {
             $data->makeVisible(['target_price']);
             $data->append(['must_have']);
