@@ -78,9 +78,9 @@ class UserOfferRequest extends FormRequest
             $must_have_price = $offer->purchase->must_have_price;
             $must_have_addr = $offer->purchase->must_have_addr;
             $must_have_image = $offer->purchase->must_have_image;
-            $rules['offer_price'] = ['numeric', 'gt:0', Rule::requiredIf($must_have_price)];
-            $rules['offer_address'] = ['array', 'size:3', Rule::requiredIf($must_have_addr)];
-            $rules['offer_media'] = ['array', Rule::requiredIf($must_have_image)];
+            $rules['offer_price'] = ['numeric', 'gt:0', Rule::requiredIf(boolval($must_have_price))];
+            $rules['offer_address'] = ['array', 'size:3', Rule::requiredIf(boolval($must_have_addr))];
+            $rules['offer_media'] = ['array', Rule::requiredIf(boolval($must_have_image))];
             return $rules;
         }
         return $rules;

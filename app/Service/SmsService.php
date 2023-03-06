@@ -97,7 +97,6 @@ class SmsService
     {
         self::$a = 'a';
         $client = new Client();
-        var_dump(Coroutine::inCoroutine());
         return $client->get('https://www.baidu.com')->getBody()->getContents();
     }
 

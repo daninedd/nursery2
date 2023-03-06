@@ -112,7 +112,7 @@ class Supply extends Model
         $has_value = array_filter(array_column($all, 'has_value'));
         $progress = count($has_value) / count($all);
         $progress = round($progress, 2);
-        return 100 * $progress;
+        return ceil(100 * $progress);
     }
 
     public function getCategoryAttribute()

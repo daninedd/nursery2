@@ -96,6 +96,19 @@ class SupplyController extends AbstractController
     }
 
     /**
+     * 下架供应.
+     */
+    #[PostMapping(path: 'downSupply')]
+    public function downSupply()
+    {
+        $request = $this->container->get(SupplyRequest::class);
+        $request->scene(SupplyRequest::SCENE_REFRESH_SUPPLY);
+        $request->validateResolved();
+        $data = $request->downSupply();
+        return $this->success($data);
+    }
+
+    /**
      * 推荐供应列表.
      */
     #[GetMapping(path: 'getRecommendList')]

@@ -156,7 +156,6 @@ class MongoTask
             ['multi' => false]
         );
         $result = $this->manager()->executeBulkWrite('nursery.messages', $bulk);
-        var_dump($result);
         return $result->getModifiedCount();
     }
 

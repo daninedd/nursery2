@@ -17,16 +17,15 @@ use Hyperf\HttpServer\Annotation\Middlewares;
 #[Middlewares([JwtAuthMiddleware::class])]
 class IndexController extends AbstractController
 {
-    public const IP = 'http://192.168.31.48:9501';
 
     #[GetMapping(path: 'banner')]
     public function banner()
     {
         $data = [
-            ['id' => 1, 'src' => 'url1', 'url' => self::IP . '/static/images/1.jpg'],
-            ['id' => 2, 'src' => 'url2', 'url' => self::IP . '/static/images/2.jpg'],
-            ['id' => 3, 'src' => 'url3', 'url' => self::IP . '/static/images/3.jpg'],
-            ['id' => 4, 'src' => 'url4', 'url' => self::IP . '/static/images/4.jpg'],
+            ['id' => 1, 'src' => 'url1', 'url' => env('STATIC_PREFIX') . '/static/images/1.jpg'],
+            ['id' => 2, 'src' => 'url2', 'url' => env('STATIC_PREFIX') . '/static/images/2.jpg'],
+            ['id' => 3, 'src' => 'url3', 'url' => env('STATIC_PREFIX') . '/static/images/3.jpg'],
+            ['id' => 4, 'src' => 'url4', 'url' => env('STATIC_PREFIX') . '/static/images/4.jpg'],
         ];
         return $this->success($data);
     }

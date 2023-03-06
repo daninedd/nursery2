@@ -143,9 +143,9 @@ class PurchaseRequest extends FormRequest
             $must_have_price = $purchase->must_have_price;
             $must_have_addr = $purchase->must_have_addr;
             $must_have_image = $purchase->must_have_image;
-            $rules['offerPrice'] = ['numeric', 'gt:0', Rule::requiredIf($must_have_price)];
-            $rules['offerAddress'] = ['array', 'size:3', Rule::requiredIf($must_have_addr)];
-            $rules['offerMedia'] = ['array', Rule::requiredIf($must_have_image)];
+            $rules['offerPrice'] = ['numeric', 'gt:0', Rule::requiredIf(boolval($must_have_price))];
+            $rules['offerAddress'] = ['array', 'size:3', Rule::requiredIf(boolval($must_have_addr))];
+            $rules['offerMedia'] = ['array', Rule::requiredIf(boolval($must_have_image))];
             return $rules;
         }
         return $rules;
