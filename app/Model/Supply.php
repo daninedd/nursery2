@@ -53,7 +53,6 @@ use Hyperf\Snowflake\Concern\Snowflake;
 class Supply extends Model
 {
     use Snowflake;
-    use Cacheable;
 
     public const PUSH_STATUS_ENABLE = 1;
 

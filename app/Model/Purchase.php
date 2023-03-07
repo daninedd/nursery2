@@ -54,7 +54,6 @@ use Hyperf\Snowflake\Concern\Snowflake;
 class Purchase extends Model
 {
     use Snowflake;
-    use Cacheable;
     use SoftDeletes;
 
     public const PUSH_STATUS_ENABLE = 1;
