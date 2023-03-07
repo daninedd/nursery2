@@ -9,14 +9,17 @@ namespace App\Request;
 
 use App\Constants\Constant;
 use App\Exception\BusinessException;
+use App\Job\CounterVisitJob;
 use App\Model\Address;
 use App\Model\Category;
 use App\Model\Product;
 use App\Model\Purchase;
 use App\Model\User;
 use App\Model\UserOffer;
+use App\Service\QueueService;
 use Carbon\Carbon;
 use Hyperf\Database\Query\Builder;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\Paginator\LengthAwarePaginator;
 use Hyperf\Validation\Request\FormRequest;
 use Hyperf\Validation\Rule;
@@ -56,6 +59,9 @@ class PurchaseRequest extends FormRequest
         self::SCENE_RE_UP => ['re_up_id'],
         self::SCENE_DELETE_PURCHASE => ['delete_id'],
     ];
+
+    #[Inject]
+    protected QueueService $queueService;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -252,6 +258,7 @@ class PurchaseRequest extends FormRequest
             $data->makeVisible(['target_price']);
             $data->append(['must_have']);
         }
+        $this->queueService->push(CounterVisitJob::TYPE_PURCHASE, $data['id']);
         return $data;
     }
 

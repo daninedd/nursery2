@@ -7,7 +7,12 @@ declare(strict_types=1);
  */
 namespace App\Model;
 
+use App\Job\CounterVisitJob;
+use App\Service\QueueService;
 use Hyperf\Cache\Cache;
+use Hyperf\Database\Model\Booted;
+use Hyperf\Database\Model\Events\Restored;
+use Hyperf\Database\Model\Events\Retrieved;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\ModelCache\Cacheable;

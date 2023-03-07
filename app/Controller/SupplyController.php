@@ -102,7 +102,7 @@ class SupplyController extends AbstractController
     public function downSupply()
     {
         $request = $this->container->get(SupplyRequest::class);
-        $request->scene(SupplyRequest::SCENE_REFRESH_SUPPLY);
+        $request->scene(SupplyRequest::SCENE_DOWN_SUPPLY);
         $request->validateResolved();
         $data = $request->downSupply();
         return $this->success($data);

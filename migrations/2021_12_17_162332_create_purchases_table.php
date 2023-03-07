@@ -47,7 +47,7 @@ class CreatePurchasesTable extends Migration
             $table->unsignedInteger('num')->default(1)->comment('求购数量');
             $table->json('address')->nullable()->comment('求购地址');
             $table->unsignedTinyInteger('access_offer')->default(0)->comment('1:已接受报价,2:未接受报价');
-            $table->unsignedBigInteger('visit_count')->default(0)->comment('浏览次数');
+            $table->unsignedBigInteger('visit_count')->default(1)->comment('浏览次数');
             $table->date('expire_at')->nullable()->comment('截止日期');
             $table->dateTime('created_at')->useCurrent();
             $table->dateTime('updated_at');

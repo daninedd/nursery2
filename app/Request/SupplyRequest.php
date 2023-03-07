@@ -8,11 +8,13 @@ declare(strict_types=1);
 namespace App\Request;
 
 use App\Exception\BusinessException;
+use App\Job\CounterVisitJob;
 use App\Model\Address;
 use App\Model\Category;
 use App\Model\Product;
 use App\Model\Supply;
 use App\Model\User;
+use App\Service\QueueService;
 use Carbon\Carbon;
 use Hyperf\Cache\Cache;
 use Hyperf\Database\Model\Builder;
@@ -44,7 +46,7 @@ class SupplyRequest extends FormRequest
             'price_type', 'address', 'media', 'remark', 'num', ],
         'edit' => ['id', 'title', 'price1', 'price2', 'specs', 'unit',
             'price_type', 'address', 'media', 'remark', 'num', ],
-        'detail' => ['id'],
+        self::SCENE_DETAIL => ['id'],
         'list' => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'], // order1:供应状态,order2:浏览次数,3:发布时间
         'user_supply_list' => ['push_status'],
         'refresh_supply' => ['supply_id'],
@@ -54,6 +56,9 @@ class SupplyRequest extends FormRequest
 
     #[Inject]
     protected Cache $cache;
+
+    #[Inject]
+    protected QueueService $queueService;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -70,15 +75,24 @@ class SupplyRequest extends FormRequest
     {
         $userId = $this->getRequest()->getAttribute('userId');
         return [
-            'id' => ['required', Rule::exists('supplies')->where(function (\Hyperf\Database\Query\Builder $query) use ($userId) {
-                $query->where('push_status', Supply::PUSH_STATUS_ENABLE);
-                if ($this->getScene() == self::SCENE_EDIT) {
-                    $query->where('user_id', $userId);
+            'id' => ['required', function ($attr, $value, $fail) use ($userId) {
+                $supply = Supply::findFromCache($value);
+                if (empty($supply)) {
+                    $fail('未找到供应详情');
                 }
-            })],
+                if ($this->getScene() == self::SCENE_EDIT) {
+                    if ($supply->user_id != $userId) {
+                        $fail('供应详情不存在');
+                    }
+                }
+                if ($this->getScene() == self::SCENE_DETAIL) {
+                    if ($userId != $supply->user_id && $supply->push_status != Supply::PUSH_STATUS_ENABLE) {
+                        $fail('供应详情不存在');
+                    }
+                }
+            }],
             'down_id' => ['required', Rule::exists('supplies', 'id')->where(function (\Hyperf\Database\Query\Builder $query) use ($userId) {
-                $query->where('push_status', Supply::PUSH_STATUS_ENABLE)
-                    ->where('user_id', $userId);
+                $query->where('user_id', $userId);
             }), ],
             'supply_id' => ['required',
                 function ($attr, $value, $fail) {
@@ -193,6 +207,7 @@ class SupplyRequest extends FormRequest
     public function detail()
     {
         $data = $this->validated();
+        $this->queueService->push(CounterVisitJob::TYPE_SUPPLY, $data['id']);
         return Supply::findFromCache($data['id'])->load('user')->append(['category', 'has_enshrine'])->makeVisible('category_id');
     }
 
@@ -356,7 +371,7 @@ class SupplyRequest extends FormRequest
         $validatedData = $this->validated();
         $id = $validatedData['down_id'];
         $supply = Supply::findFromCache($id);
-        $supply->push_status = Supply::PUSH_STATUS_DISABLE;
+        $supply->push_status = 1 ^ Supply::PUSH_STATUS_DISABLE;
         return $supply->save();
     }
 

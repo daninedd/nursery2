@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Exception\BusinessException;
-use GuzzleHttp\Client;
 use Hyperf\Cache\Cache;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Logger\LoggerFactory;
@@ -90,13 +89,6 @@ class SmsService
             return true;
         }
         return false;
-    }
-
-    public function test()
-    {
-        self::$a = 'a';
-        $client = new Client();
-        return $client->get('https://www.baidu.com')->getBody()->getContents();
     }
 
     protected function generateCode($length = 6): int

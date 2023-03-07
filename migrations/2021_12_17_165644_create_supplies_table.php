@@ -39,7 +39,7 @@ class CreateSuppliesTable extends Migration
             $table->unsignedInteger('sort')->default(0)->comment('排序');
             $table->text('description')->nullable()->comment('供应描述');
             $table->unsignedInteger('num')->default(1)->comment('供应数量');
-            $table->unsignedTinyInteger('visit_count')->default(1)->comment('曝光数量');
+            $table->unsignedBigInteger('visit_count')->default(1)->comment('曝光数量');
             $table->json('address')->nullable()->comment('供应地址');
             $table->unsignedInteger('unit')->default(1)->comment('1:株,2:颗,3:丛,4:斤,5:吨,6:芽,7:个,8:两');
             $table->date('expire_at')->nullable()->comment('截止日期');
