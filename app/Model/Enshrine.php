@@ -46,7 +46,20 @@ class Enshrine extends Model
 
     public function getShowItemAttribute()
     {
-        return ['id' => $this->item_snapshot['id'] ?? null, 'num' => $this->item_snapshot['num'] ?? '', 'skus' => $this->item_snapshot['skus'] ?? '', 'title' => $this->item_snapshot['title'] ?? '', 'medias' => $this->item_snapshot['medias'] ?? '', 'address' => $this->item_snapshot['address'] ?? '', 'visit_count' => $this->item_snapshot['visit_count'] ?? '', 'product_name' => $this->item_snapshot['product_name'] ?? '', 'created_at' => $this->item_snapshot['created_at'] ?? '', 'expire_at' => $this->item_snapshot['expire_at'] ?? null];
+        return [
+            'id' => $this->item_snapshot['id'] ?? null,
+            'num' => $this->item_snapshot['num'] ?? '',
+            'skus' => $this->item_snapshot['skus'] ?? '',
+            'title' => $this->item_snapshot['title'] ?? '',
+            'medias' => $this->item_snapshot['medias'] ?? '',
+            'address' => $this->item_snapshot['address'] ?? '',
+            'visit_count' => $this->item_snapshot['visit_count'] ?? '',
+            'product_name' => $this->item_snapshot['product_name'] ?? '',
+            'created_at' => $this->item_snapshot['created_at'] ?? '',
+            'expire_at' => $this->item_snapshot['expire_at'] ?? null,
+            'specs' => $this->item_snapshot['specs'] ?? null,
+            'user_id' => $this->item_snapshot['user_id'] ?? '',
+        ];
     }
 
     public function asJson($value): string|false

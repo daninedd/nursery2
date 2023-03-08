@@ -7,15 +7,9 @@ declare(strict_types=1);
  */
 namespace App\Model;
 
-use App\Job\CounterVisitJob;
-use App\Service\QueueService;
 use Hyperf\Cache\Cache;
-use Hyperf\Database\Model\Booted;
-use Hyperf\Database\Model\Events\Restored;
-use Hyperf\Database\Model\Events\Retrieved;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\ModelCache\Cacheable;
 use Hyperf\Snowflake\Concern\Snowflake;
 
 /**
@@ -97,7 +91,7 @@ class Supply extends Model
         return $value;
     }
 
-    public function getSkusAttribute()
+    public function getSkusAttribute(): array
     {
         $re = [];
         foreach ($this->specs['show'] as $spec) {
@@ -124,17 +118,17 @@ class Supply extends Model
         return $this->product_name ?: $this->category_snapshot['name'];
     }
 
-    public function getLowestPriceAttribute($value)
+    public function getLowestPriceAttribute($value): float
     {
         return floatval($value);
     }
 
-    public function getHighestPriceAttribute($value)
+    public function getHighestPriceAttribute($value): float
     {
         return floatval($value);
     }
 
-    public function getHasRefreshAttribute()
+    public function getHasRefreshAttribute(): bool
     {
         return $this->cache->has(self::genRefreshCacheKey($this->id));
     }
@@ -145,12 +139,17 @@ class Supply extends Model
         return Enshrine::where([['user_id', $user], ['type', Enshrine::TYPE_SUPPLY], ['item_id', $this->id]])->value('id');
     }
 
+    public function getContactAttribute($value): array|string
+    {
+        return substr_replace($value, '*******', 4, 7);
+    }
+
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public static function genRefreshCacheKey($supply_id)
+    public static function genRefreshCacheKey($supply_id): string
     {
         return 'refresh:' . $supply_id;
     }

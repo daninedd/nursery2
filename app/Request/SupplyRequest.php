@@ -207,8 +207,12 @@ class SupplyRequest extends FormRequest
     public function detail()
     {
         $data = $this->validated();
+        $result = Supply::findFromCache($data['id'])
+            ->load('user')
+            ->append(['category', 'has_enshrine'])
+            ->makeVisible(['category_id', 'push_status']);
         $this->queueService->push(CounterVisitJob::TYPE_SUPPLY, $data['id']);
-        return Supply::findFromCache($data['id'])->load('user')->append(['category', 'has_enshrine'])->makeVisible('category_id');
+        return $result;
     }
 
     public function getList()
@@ -371,7 +375,7 @@ class SupplyRequest extends FormRequest
         $validatedData = $this->validated();
         $id = $validatedData['down_id'];
         $supply = Supply::findFromCache($id);
-        $supply->push_status = 1 ^ Supply::PUSH_STATUS_DISABLE;
+        $supply->push_status = 1 ^ $supply->push_status;
         return $supply->save();
     }
 

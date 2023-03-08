@@ -10,7 +10,6 @@ namespace App\Model;
 use Carbon\Carbon;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\ModelCache\Cacheable;
 use Hyperf\Snowflake\Concern\Snowflake;
 
 /**
@@ -111,7 +110,7 @@ class Purchase extends Model
         return 100 * $progress;
     }
 
-    public function getSkusAttribute()
+    public function getSkusAttribute(): array
     {
         $re = [];
         foreach ($this->specs['show'] as $spec) {
@@ -122,7 +121,7 @@ class Purchase extends Model
         return $re;
     }
 
-    public function getIsExpiredAttribute()
+    public function getIsExpiredAttribute(): bool
     {
         return Carbon::now()->gt($this->expire_at);
     }
@@ -132,9 +131,14 @@ class Purchase extends Model
         return $this->category_snapshot['icon'] ?: env('STATIC_PREFIX') . '/static/images/123.jpg';
     }
 
-    public function getTargetPriceAttribute($value)
+    public function getTargetPriceAttribute($value): float
     {
         return floatval($value);
+    }
+
+    public function getContactAttribute($value): array|string
+    {
+        return substr_replace($value, '*******', 4, 7);
     }
 
     public function getHasEnshrineAttribute()
@@ -150,7 +154,7 @@ class Purchase extends Model
         return UserOffer::where([['user_id', $user], ['purchase_id', $this->id]])->value('id');
     }
 
-    public function getMustHaveAttribute($value)
+    public function getMustHaveAttribute($value): array
     {
         $r = [];
         if ($this->must_have_image) {
