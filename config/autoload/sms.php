@@ -23,11 +23,11 @@ return [
             'file' => 'runtime/logs/sms-error.log',
         ],
         'aliyun' => [
-            'access_key_id' => '***REMOVED***', // hckj:***REMOVED***
-            'access_key_secret' => '***REMOVED***', // hckj:***REMOVED***
-            'sign_name' => '小强购物',
+            'access_key_id' => env('ALIYUN_SMS_ACCESS_KEY_ID'),
+            'access_key_secret' => env('ALIYUN_SMS_ACCESS_SECRET'),
+            'sign_name' => env('ALIYUN_SMS_SIGN_NAME'),
             'template_codes' => [
-                'login' => '***REMOVED***',
+                'login' => env('ALIYUN_SMS_TEMPLATE_CODE')
             ],
         ],
 
