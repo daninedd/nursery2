@@ -18,8 +18,11 @@ services:
       - "redis:redis"
       - "mongo:mongo"
       - "mysql:mysql"
+    networks:
+      - nursery
   redis:
     image: redis
+    container_name: redis
     ports:
        - "6378:6379"
     volumes:
@@ -27,8 +30,11 @@ services:
     command: "--requirepass $REDIS_AUTH"
     environment:
       - TZ=Asia/Shanghai
+    networks:
+      - nursery
   mongo:
     image: mongo:6.0.1
+    container_name: mongo
     ports:
       - "27016:27017"
     environment:
@@ -39,8 +45,11 @@ services:
     volumes:
       - ~/ns/mongo/data/db:/data/db
       - ~/ns/mongo/data/log:/var/log/mongo
+    networks:
+      - nursery
   mysql:
     image: mysql:8.0
+    container_name: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=Welcome1++
       - MYSQL_DATABASE=nursery2
@@ -52,8 +61,11 @@ services:
       - ./data/init_mysql.sql:/docker-entrypoint-initdb.d/init_mysql.sql
     security_opt:
       - seccomp:unconfined
+    networks:
+      - nursery
   nginx:
     image: nginx:latest
+    container_name: nginx
     ports:
       - "9999:80"
       - "9998:8081"
@@ -61,3 +73,7 @@ services:
       - ./data/nginx/conf.d:/etc/nginx/conf.d
     links:
       - "api:nursery"
+    networks:
+      - nursery
+networks:
+  nursery:
