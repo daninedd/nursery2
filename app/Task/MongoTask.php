@@ -180,6 +180,13 @@ class MongoTask
         }
 
         $uri = env('MONGO_URI', 'mongodb://127.0.0.1');
-        return $this->manager = new Manager($uri, ['username' => env('MONGO_USER'), 'password' => env('MONGO_PASSWORD')]);
+        $user = env('MONGO_USER');
+        $password = env('MONGO_PASSWORD');
+        $options = [];
+        if($user && $password){
+            $options['username'] = $user;
+            $options['password'] = $password;
+        }
+        return $this->manager = new Manager($uri, $options);
     }
 }
