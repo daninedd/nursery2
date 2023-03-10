@@ -26,8 +26,9 @@ ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
 RUN apk add --no-cache \
     php-mongodb
 
-RUN apk --no-cache --allow-untrusted --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ add gnu-libiconv
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+RUN apk --no-cache --allow-untrusted --repository https://mirrors.ustc.edu.cn/alpine/edge/community/ add gnu-libiconv=1.15-r2
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+
 # update
 RUN set -ex \
     # show php version and extensions
@@ -54,7 +55,7 @@ WORKDIR /opt/www
 
 # Composer Cache
 # COPY ./composer.* /opt/www/
-# RUN composer install --no-dev --no-scripts
+# RUN composer install --no-dev --no-scriptsre
 
 COPY . /opt/www
 RUN composer install --no-dev -o && php bin/hyperf.php
