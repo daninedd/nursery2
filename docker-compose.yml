@@ -72,6 +72,7 @@ services:
       - "9998:8081"
     volumes:
       - ./data/nginx/conf.d:/etc/nginx/conf.d
+      - ./data/nginx/cert:/etc/nginx/cert
     links:
       - "api:nursery"
     networks:
