@@ -178,7 +178,8 @@ class MongoTask
         if ($this->manager instanceof Manager) {
             return $this->manager;
         }
+
         $uri = env('MONGO_URI', 'mongodb://127.0.0.1');
-        return $this->manager = new Manager($uri);
+        return $this->manager = new Manager($uri, ['username' => env('MONGO_USER'), 'password' => env('MONGO_PASSWORD')]);
     }
 }

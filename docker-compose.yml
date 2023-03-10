@@ -6,7 +6,6 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./:/opt/www
-    env_file: ./.env
     ports:
       - "9501:9501"
       - "9502:9502"
@@ -40,8 +39,8 @@ services:
       - "27016:27017"
     environment:
       - TZ=Asia/Shanghai
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=Welcome1++
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
       - MONGO_INITDB_DATABASE=nursery
     volumes:
       - ~/ns/mongo/data/db:/data/db
@@ -52,8 +51,8 @@ services:
     image: mysql:8.0
     container_name: mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=Welcome1++
-      - MYSQL_DATABASE=nursery2
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=$DB_DATABASE{}
       - TZ=Asia/Shanghai
     ports:
       - "3305:3306"
@@ -66,6 +65,8 @@ services:
       - nursery
   nginx:
     image: nginx:latest
+    environment:
+      - TZ=Asia/Shanghai
     container_name: nginx
     ports:
       - "9999:80"
