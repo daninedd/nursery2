@@ -35,6 +35,8 @@
 5. 在/data/project目录下执行 `composer install`
 
 6. 项目里出现vendor文件夹，然后退出、删除刚刚创建的容器
+7. 修改vendor/phper666/jwt-auth/src/Command/JWTCommand.php 第20 行 ,$name 前加上类型判断 ?string, 修改后为：`protected ?string $name = 'jwt:publish';`  
+8. 拷贝data/nginx/conf.d/nursery/conf.example为nursery.conf,按需修改。如果需要ssl，在data/nginx下创建目录cert,并且将证书放进去，类型为.key和.pem
 
 ### 部署全部项目
 
