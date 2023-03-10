@@ -6,7 +6,7 @@ services:
       dockerfile: ./Dockerfile
     volumes:
       - ./:/opt/www
-    env_file: ./.env.prod
+    env_file: ./.env
     ports:
       - "9501:9501"
       - "9502:9502"
@@ -14,6 +14,7 @@ services:
       - redis
       - mongo
       - mysql
+    privileged: true
     links:
       - "redis:redis"
       - "mongo:mongo"
