@@ -63,7 +63,7 @@ return [
         Constant::OPTION_PACKAGE_MAX_LENGTH => 20 * 1024 * 1024,
         'document_root' => BASE_PATH . '/public',
         'enable_static_handler' => true,
-        'task_worker_num' => 8,
+        'task_worker_num' => 2,
         'task_enable_coroutine' => false,
     ],
     'callbacks' => [

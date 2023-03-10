@@ -26,7 +26,8 @@ ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
 RUN apk add --no-cache \
     php-mongodb
 
-RUN apk --no-cache --allow-untrusted --repository https://mirrors.ustc.edu.cn/alpine/edge/community/ add gnu-libiconv=1.15-r2
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories \
+    && apk --no-cache --allow-untrusted --repository https://mirrors.ustc.edu.cn/alpine/edge/community/ add gnu-libiconv=1.15-r2
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
 # update
