@@ -13,3 +13,4 @@ vendor/
 *.cache
 access_token.json
 data/nginx/cert/
+data/nginx/conf.d/nursery.conf
