@@ -12,3 +12,4 @@ vendor/
 .phpunit*
 *.cache
 access_token.json
+./data/nginx/cert/
