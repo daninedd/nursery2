@@ -26,6 +26,8 @@ ENV TIMEZONE=${timezone:-"Asia/Shanghai"} \
 RUN apk add --no-cache \
     php-mongodb
 
+RUN apk --no-cache --allow-untrusted --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ add gnu-libiconv
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 # update
 RUN set -ex \
     # show php version and extensions
