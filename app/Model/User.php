@@ -84,7 +84,7 @@ class User extends Model implements Authenticatable
     {
         if ($this->avatar) {
             $prefix = config('file.storage.oss.prefix');
-            return $prefix . $this->avatar;
+            return $prefix . '/' . $this->avatar;
         }
         return env('STATIC_PREFIX') . '/static/images/defaultAvatar.png';
     }

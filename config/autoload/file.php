@@ -61,6 +61,7 @@ return [
             'bucket' => env('OSS_BUCKET'),
             'endpoint' => env('OSS_ENDPOINT'),
             'prefix' => env('OSS_PREFIX'),
+            'uploadEndpoint' => env('OSS_UPLOAD_ENDPOINT')
             // 'timeout' => 3600,
             // 'connectTimeout' => 10,
             // 'isCName' => false,

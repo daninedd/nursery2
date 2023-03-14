@@ -94,6 +94,11 @@ class MessageController extends AbstractController
         }
         $mongoClient = ApplicationContext::getContainer()->get(MongoTask::class);
         $list = $mongoClient->getChatList($page, $conversationId);
+        foreach ($list as $k => $value){
+            if ($value->msg_type == 'image' || $value->msg_type == 'video'){
+                $list[$k]->content = config('file.storage.oss.prefix') . '/' . $value->content;
+            }
+        }
         // 获取聊天对象的头像
         // $conversation = $mongoClient->query('nursery.conversations', ['_id' => new ObjectId($conversationId)]);
         // $chatObjIds = $conversation[0]->participants;

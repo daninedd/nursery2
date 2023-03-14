@@ -53,7 +53,7 @@ class UserOffer extends Model
         $value = json_decode($value, true);
         $prefix = config('file.storage.oss.prefix');
         foreach ($value as $k => $item) {
-            $value[$k]['url'] = $prefix . $item['path'];
+            $value[$k]['url'] = $prefix . '/'. $item['path'];
         }
         return $value;
     }
