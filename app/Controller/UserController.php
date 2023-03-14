@@ -120,8 +120,10 @@ class UserController extends AbstractController
     public function getPhoneNumber(): \Psr\Http\Message\ResponseInterface
     {
         $userId = $this->request->getAttribute('userId');
-        // $user = User::findFromCache($userId);
-        $data = ['v_phone' => '13350854583'];
-        return $this->success($data);
+        $user = User::findFromCache($userId);
+        if ($user->phone){
+            return $this->success(['v_phone' => $user->phone]);
+        }
+        throw new BusinessException(400, '用户还未绑定手机号');
     }
 }

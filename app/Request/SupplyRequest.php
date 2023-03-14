@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace App\Request;
 
+use App\Constants\Constant;
 use App\Exception\BusinessException;
 use App\Job\CounterVisitJob;
 use App\Model\Address;
@@ -117,7 +118,7 @@ class SupplyRequest extends FormRequest
             'specs' => ['required', 'array:show,hiddens'],
             'specs.show' => ['present', 'array'],
             'specs.hiddens' => ['present', 'array'],
-            'unit' => ['required', Rule::in([1, 2, 3, 4, 5, 6, 7, 8, 9])],
+            'unit' => ['required', Rule::in(array_keys(Constant::UNITS))],
             'price_type' => ['required', Rule::in([1, 2])],
             'address' => 'required|max:32',
             'media' => 'array|max:9',
@@ -196,6 +197,7 @@ class SupplyRequest extends FormRequest
         $supply->push_status = 1;
         $supply->description = $data['remark'];
         $supply->num = $data['num'];
+        $supply->unit = $data['unit'];
         $supply->address = $data['address'];
         $supply->expire_at = (new Carbon())->addDays(3)->format('Y-m-d H:i:s');
         if ($supply->save()) {

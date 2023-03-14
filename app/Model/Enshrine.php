@@ -59,6 +59,8 @@ class Enshrine extends Model
             'expire_at' => $this->item_snapshot['expire_at'] ?? null,
             'specs' => $this->item_snapshot['specs'] ?? null,
             'user_id' => $this->item_snapshot['user_id'] ?? '',
+            'unit' => $this->item_snapshot['unit'] ?? '',
+            'unitText' => \App\Constants\Constant::UNITS[$this->item_snapshot['unit']] ?? '株'
         ];
     }
 

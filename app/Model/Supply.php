@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace App\Model;
 
+use App\Constants\Constant;
 use Hyperf\Cache\Cache;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -74,7 +75,7 @@ class Supply extends Model
 
     protected array $hidden = ['product_id', 'category_id', 'push_status', 'recommend_status', 'verify_status', 'expire_at', 'updated_at', 'deleted_at', 'product_snapshot', 'category_snapshot', 'ambiguous_price'];
 
-    protected array $appends = ['skus'];
+    protected array $appends = ['skus', 'unitText'];
 
     public function asJson($value): string|false
     {
@@ -142,6 +143,11 @@ class Supply extends Model
     public function getContactAttribute($value): array|string
     {
         return substr_replace($value, '*******', 4, 7);
+    }
+
+    public function getUnitTextAttribute(): string
+    {
+        return Constant::UNITS[$this->unit];
     }
 
     public function user()

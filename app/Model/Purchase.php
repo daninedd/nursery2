@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 namespace App\Model;
 
+use App\Constants\Constant;
 use Carbon\Carbon;
 use Hyperf\Database\Model\SoftDeletes;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -82,7 +83,7 @@ class Purchase extends Model
 
     protected array $hidden = ['product_id', 'push_status', 'recommend_status', 'verify_status', 'sort', 'access_offer', 'target_price', 'show_target_price', 'offer_count', 'product_snapshot', 'category_snapshot', 'ambiguous_price', 'deleted_at'];
 
-    protected array $appends = ['skus', 'is_expired'];
+    protected array $appends = ['skus', 'is_expired', 'unitText'];
 
     public function asJson($value): string|false
     {
@@ -152,6 +153,11 @@ class Purchase extends Model
     {
         $user = $this->getContainer()->get(RequestInterface::class)->getAttribute('userId');
         return UserOffer::where([['user_id', $user], ['purchase_id', $this->id]])->value('id');
+    }
+
+    public function getUnitTextAttribute(): string
+    {
+        return Constant::UNITS[$this->unit];
     }
 
     public function getMustHaveAttribute($value): array

@@ -121,7 +121,7 @@ class PurchaseRequest extends FormRequest
             'specs' => ['required', 'array:show,hiddens'],
             'specs.show' => ['present', 'array'],
             'specs.hiddens' => ['present', 'array'],
-            'unit' => ['required', Rule::in(Constant::UNITS)],
+            'unit' => ['required', Rule::in(array_keys(Constant::UNITS))],
             'price_type' => ['required', Rule::in([1, 2])],
             'address' => 'required|max:32',
             'media' => 'array|max:9',
@@ -252,7 +252,8 @@ class PurchaseRequest extends FormRequest
     public function detail()
     {
         $data = $this->validated();
-        $data = Purchase::with(['user:id,name,phone,avatar'])->find($data['id']);
+        $data = Purchase::findFromCache($data['id']);
+        $data->load('user');
         $data->append(['has_enshrine', 'has_offer']);
         if ($data->user_id == $this->getRequest()->getAttribute('userId')) {
             $data->makeVisible(['target_price']);

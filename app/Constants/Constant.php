@@ -13,5 +13,14 @@ use Hyperf\Constants\Annotation\Constants;
 #[Constants]
 class Constant extends AbstractConstants
 {
-    public const UNITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    public const UNITS = [
+        1=>'株',
+        2=>'颗',
+        3=>'丛',
+        4=>'斤',
+        5=>'吨',
+        6=>'芽',
+        7=>'个',
+        8=>'两',
+    ];
 }
