@@ -27,7 +27,7 @@ return [
             'access_key_secret' => env('ALIYUN_SMS_ACCESS_SECRET'),
             'sign_name' => env('ALIYUN_SMS_SIGN_NAME'),
             'template_codes' => [
-                'login' => env('ALIYUN_SMS_TEMPLATE_CODE')
+                'login' => env('ALIYUN_SMS_TEMPLATE_CODE'),
             ],
         ],
 

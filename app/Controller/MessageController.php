@@ -94,8 +94,8 @@ class MessageController extends AbstractController
         }
         $mongoClient = ApplicationContext::getContainer()->get(MongoTask::class);
         $list = $mongoClient->getChatList($page, $conversationId);
-        foreach ($list as $k => $value){
-            if ($value->msg_type == 'image' || $value->msg_type == 'video'){
+        foreach ($list as $k => $value) {
+            if ($value->msg_type == 'image' || $value->msg_type == 'video') {
                 $list[$k]->content = config('file.storage.oss.prefix') . '/' . $value->content;
             }
         }

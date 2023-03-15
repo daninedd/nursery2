@@ -36,9 +36,13 @@ class CounterVisitJob extends Job
     public function handle()
     {
         if ($this->type == self::TYPE_SUPPLY) {
-            Supply::findFromCache($this->id)->increment('visit_count');
+            $supply = Supply::findFromCache($this->id);
+            $supply->timestamps = false;
+            $supply->increment('visit_count');
         } elseif ($this->type == self::TYPE_PURCHASE) {
-            Purchase::findFromCache($this->id)->increment('visit_count');
+            $purchase = Purchase::findFromCache($this->id);
+            $purchase->timestamps = false;
+            $purchase->increment('visit_count');
         }
     }
 }

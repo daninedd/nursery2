@@ -183,7 +183,7 @@ class MongoTask
         $user = env('MONGO_USER');
         $password = env('MONGO_PASSWORD');
         $options = [];
-        if($user && $password){
+        if ($user && $password) {
             $options['username'] = $user;
             $options['password'] = $password;
         }

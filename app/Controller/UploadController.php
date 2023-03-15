@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Hyperf\HttpMessage\Stream\SwooleFileStream;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Annotation\Middleware;
 use Hyperf\HttpServer\Annotation\Middlewares;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -41,33 +40,16 @@ class UploadController extends AbstractController
     {
         $ossAppKey = config('file.storage.oss.accessId');
         $ossAppSecret = config('file.storage.oss.accessSecret');
-        $timeOut = 1;  //限制参数的生效时间，单位为小时，默认值为1。
-        $maxSize = 10;  //限制上传文件的大小，单位为MB，默认值为10。
-        $policy =  $this->getPolicyBase64($timeOut, $maxSize);
+        $timeOut = 1;  // 限制参数的生效时间，单位为小时，默认值为1。
+        $maxSize = 10;  // 限制上传文件的大小，单位为MB，默认值为10。
+        $policy = $this->getPolicyBase64($timeOut, $maxSize);
         $signature = $this->signature($policy, $ossAppSecret);
         return $this->success([
             'signature' => $signature,
             'access_key' => $ossAppKey,
             'policy' => $policy,
-            'endpoint' => config('file.storage.oss.uploadEndpoint')
+            'endpoint' => config('file.storage.oss.uploadEndpoint'),
         ]);
-    }
-    protected function getPolicyBase64($timeOut, $maxSize){
-        $time  = Carbon::now()->addHours($timeOut)->toIso8601ZuluString();
-        $policyText = [
-            'expiration' => $time,
-            'conditions' => [
-                ['bucket' => config('file.storage.oss.bucket'),],
-                ['content-length-range', 0, $maxSize * 1024 * 1024],
-                ['in', '$content-type', ['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/pjpeg', 'image/x-png','image/webp', 'video/mp4', 'video/ogg']],
-                ["starts-with", '$key', "nursery/"],
-            ]
-        ];
-        return base64_encode(json_encode($policyText));
-    }
-
-    protected function signature($policy, $ossAppSecret){
-        return base64_encode(hash_hmac('sha1', $policy, $ossAppSecret, true));
     }
 
     #[PostMapping(path: 'upload')]
@@ -117,7 +99,7 @@ class UploadController extends AbstractController
         }
     }
 
-    /** 删除文件
+    /** 删除文件.
      * @throws FilesystemException
      */
     #[Middlewares([JwtAuthMiddleware::class])]
@@ -125,9 +107,29 @@ class UploadController extends AbstractController
     public function delMedia(ResponseInterface $response, \League\Flysystem\Filesystem $filesystem)
     {
         $path = $this->request->input('path');
-        if ($filesystem->fileExists($path)){
+        if ($filesystem->fileExists($path)) {
             $filesystem->delete($path);
         }
         return $this->success(true);
+    }
+
+    protected function getPolicyBase64($timeOut, $maxSize)
+    {
+        $time = Carbon::now()->addHours($timeOut)->toIso8601ZuluString();
+        $policyText = [
+            'expiration' => $time,
+            'conditions' => [
+                ['bucket' => config('file.storage.oss.bucket')],
+                ['content-length-range', 0, $maxSize * 1024 * 1024],
+                ['in', '$content-type', ['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/pjpeg', 'image/x-png', 'image/webp', 'video/mp4', 'video/ogg']],
+                ['starts-with', '$key', 'nursery/'],
+            ],
+        ];
+        return base64_encode(json_encode($policyText));
+    }
+
+    protected function signature($policy, $ossAppSecret)
+    {
+        return base64_encode(hash_hmac('sha1', $policy, $ossAppSecret, true));
     }
 }

@@ -121,7 +121,7 @@ class UserController extends AbstractController
     {
         $userId = $this->request->getAttribute('userId');
         $user = User::findFromCache($userId);
-        if ($user->phone){
+        if ($user->phone) {
             return $this->success(['v_phone' => $user->phone]);
         }
         throw new BusinessException(400, '用户还未绑定手机号');
