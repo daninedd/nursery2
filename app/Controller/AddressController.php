@@ -15,7 +15,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middlewares;
 
 #[Controller]
-#[Middlewares([JwtAuthMiddleware::class])]
+# #[Middlewares([JwtAuthMiddleware::class])]
 class AddressController extends AbstractController
 {
     /**
@@ -60,5 +60,16 @@ class AddressController extends AbstractController
         }
         $request = $this->container->get(AddressRequest::class);
         return $this->success($request->list());
+    }
+
+    /**
+     *根据ip获取地理位置
+     */
+    #[GetMapping(path: 'getLocation')]
+    public function getLocation()
+    {
+        $ip = $this->request->getServerParams();
+        var_dump($ip);
+        return $this->success([]);
     }
 }
