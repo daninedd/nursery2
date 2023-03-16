@@ -21,6 +21,7 @@ namespace App\Model;
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property string $deleted_at
+ * @property Category $category
  */
 class Product extends Model
 {

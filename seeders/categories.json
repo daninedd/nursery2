@@ -108,5 +108,16 @@
     "icon": "",
     "sort": 0,
     "description": null
+  },
+  {
+    "id": 15,
+    "created_at": "2021-10-22 17:19:02",
+    "updated_at": "2021-10-22 17:19:02",
+    "deleted_at": null,
+    "name": "棕榈植物",
+    "parent_id": 0,
+    "icon": "",
+    "sort": 0,
+    "description": null
   }
 ]
