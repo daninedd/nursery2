@@ -48,7 +48,7 @@ class SupplyRequest extends FormRequest
         'edit' => ['id', 'title', 'price1', 'price2', 'specs', 'unit',
             'price_type', 'address', 'media', 'remark', 'num', ],
         self::SCENE_DETAIL => ['id'],
-        'list' => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'], // order1:供应状态,order2:浏览次数,3:发布时间
+        self::SCENE_LIST => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order', 'search_product_id'], // order1:供应状态,order2:浏览次数,3:发布时间
         'user_supply_list' => ['push_status'],
         'refresh_supply' => ['supply_id'],
         self::SCENE_RECOMMEND_LIST => ['id'],
@@ -136,6 +136,7 @@ class SupplyRequest extends FormRequest
             'diameter' => ['string'],
             'height' => ['string'],
             'order' => [Rule::in(['default', 'visit', 'publish_time'])],
+            'search_product_id' => ['integer'],
         ];
     }
 
@@ -227,6 +228,7 @@ class SupplyRequest extends FormRequest
         $diameter = $validatedData['diameter'] ?? '';
         $height = $validatedData['height'] ?? '';
         $order = $validatedData['order'] ?? '';
+        $search_product_id = $validatedData['search_product_id'] ?? '';
         $query = Supply::query()->with('user:id,name,avatar')
             ->where([['push_status', Supply::PUSH_STATUS_ENABLE], ['deleted_at', null]]);
         if ($keyword) {
@@ -241,6 +243,10 @@ class SupplyRequest extends FormRequest
         }
         if ($category) {
             $query->whereIn('category_id', explode(',', $category));
+        }
+
+        if ($search_product_id){
+            $query->where('product_id', $search_product_id);
         }
 
         if ($crown || $diameter || $height) {

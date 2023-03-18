@@ -33,7 +33,8 @@ class CreateMarketQuotationsTable extends Migration
             $table->string('unit')->default('株')->comment('计价单位');
             $table->string('price')->default('')->comment('本月装车价');
             $table->string('last_price')->default('')->comment('上月装车价');
-            $table->string('belong')->default('')->comment('所属年月份');
+            $table->unsignedSmallInteger('year')->default(0)->comment('所属年粉');
+            $table->unsignedTinyInteger('month')->default(0)->comment('所属月份');
             $table->string('term')->default('')->comment('期数');
             $table->string('publish_department')->nullable()->comment('发布单位');
             $table->string('publish_link')->default('')->comment('发布连接');

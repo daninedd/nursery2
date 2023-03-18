@@ -66,14 +66,18 @@ class MarketQuotationCommand extends HyperfCommand
                 $department = $spreadsheet->getActiveSheet()->getCell([1, 3])->getValue();
                 $department = preg_replace('/ | |( | )/', '', $department);
                 $publish_time = $spreadsheet->getActiveSheet()->getCell([1, 4])->getValue();
-                $publish_time = preg_replace('/ | |( | )/', '', $publish_time);
+                $publish_time = trim($publish_time);
+                $publish_time = preg_replace('/^ /', '', $publish_time);
                 $belong = $spreadsheet->getActiveSheet()->getCell([1, 2])->getValue();
                 $belong = preg_replace('/ | |( | )/', '', $belong);
                 $belong = preg_replace('/期/', '期,', $belong);
 
                 $belong = explode(',', $belong);
-                $belong = $belong[1] ?? '';
                 $term = $belong[0] ?? '';
+                $belong = $belong[1] ?? '';
+                $date = (date_parse_from_format('Y-m',$belong));
+                $year = $date['year'];
+                $month = $date['month'];
 
                 // 从第8行开始遍历
                 $i = 8;
@@ -93,16 +97,21 @@ class MarketQuotationCommand extends HyperfCommand
                         $no = $current_no;
                     }
                     $format_name = $current_product;
+                    $meter_diameter = $spreadsheet->getActiveSheet()->getCell([4, $i])->getValue();
                     if (in_array($current_product, array_keys($map))) {
-                        $current_product = $map[$current_product];
+                        if ($current_product == '红叶石楠' && $meter_diameter){
+                            $product = Product::query()->where('name', $current_product)->where(['category_id' => 8])->first();
+                        }else{
+                            $current_product = $map[$current_product];
+                        }
+                    }else{
+                        $product = Product::query()->where('name', $current_product)->first();
                     }
-                    $product = Product::query()->where('name', $current_product)->first();
                     if (empty($product)) {
                         $this->error("未找到产品:【{$current_product}】");
                         Db::rollBack();
                         return;
                     }
-                    $meter_diameter = $spreadsheet->getActiveSheet()->getCell([4, $i])->getValue();
                     $ground_diameter = $spreadsheet->getActiveSheet()->getCell([5, $i])->getValue();
                     $height = $spreadsheet->getActiveSheet()->getCell([6, $i])->getValue();
                     $crown = $spreadsheet->getActiveSheet()->getCell([7, $i])->getValue();
@@ -125,7 +134,8 @@ class MarketQuotationCommand extends HyperfCommand
                         'unit' => $unit_text ?: '',
                         'price' => $price ?: '',
                         'last_price' => $last_price ?: '暂无',
-                        'belong' => $belong ?: '',
+                        'year' => $year ?: '',
+                        'month' => $month ?: '',
                         'term' => $term ?: '',
                         'publish_department' => $department ?: '',
                         'publish_link' => '',
