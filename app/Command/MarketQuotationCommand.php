@@ -75,7 +75,7 @@ class MarketQuotationCommand extends HyperfCommand
                 $belong = explode(',', $belong);
                 $term = $belong[0] ?? '';
                 $belong = $belong[1] ?? '';
-                $date = (date_parse_from_format('Y-m',$belong));
+                $date = date_parse_from_format('Y-m', $belong);
                 $year = $date['year'];
                 $month = $date['month'];
 
@@ -99,12 +99,12 @@ class MarketQuotationCommand extends HyperfCommand
                     $format_name = $current_product;
                     $meter_diameter = $spreadsheet->getActiveSheet()->getCell([4, $i])->getValue();
                     if (in_array($current_product, array_keys($map))) {
-                        if ($current_product == '红叶石楠' && $meter_diameter){
+                        if ($current_product == '红叶石楠' && $meter_diameter) {
                             $product = Product::query()->where('name', $current_product)->where(['category_id' => 8])->first();
-                        }else{
+                        } else {
                             $current_product = $map[$current_product];
                         }
-                    }else{
+                    } else {
                         $product = Product::query()->where('name', $current_product)->first();
                     }
                     if (empty($product)) {

@@ -9,11 +9,9 @@ namespace App\Controller;
 
 use App\Middleware\JwtAuthMiddleware;
 use App\Model\MarketQuotation;
-use App\Request\FeedbackRequest;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\Middlewares;
-use function Swoole\Coroutine\Http\get;
 
 #[Controller]
 #[Middlewares([JwtAuthMiddleware::class])]
@@ -27,9 +25,9 @@ class MarketQuotationController extends AbstractController
     {
         $belong = $this->request->query('year');
         $data = MarketQuotation::query()
-            ->select(['year','month', 'title', 'publish_time', 'term', 'publish_department'])
+            ->select(['year', 'month', 'title', 'publish_time', 'term', 'publish_department'])
             ->where('year', $belong)
-            ->groupBy(['year', 'month'])->orderByDesc('month')->get();
+            ->groupBy(['year', 'month', 'title', 'publish_time', 'term', 'publish_department'])->orderByDesc('month')->get();
         return $this->success($data);
     }
 
@@ -45,7 +43,7 @@ class MarketQuotationController extends AbstractController
         $keyword = $this->request->query('keyword', '');
         $query = MarketQuotation::query()
             ->where([['year', $year], ['month', $month]]);
-        if ($keyword){
+        if ($keyword) {
             $query->where(['format_name', 'like', "%{$keyword}%"]);
         }
         return $this->success($query->paginate($perPage));

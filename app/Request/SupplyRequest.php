@@ -245,7 +245,7 @@ class SupplyRequest extends FormRequest
             $query->whereIn('category_id', explode(',', $category));
         }
 
-        if ($search_product_id){
+        if ($search_product_id) {
             $query->where('product_id', $search_product_id);
         }
 
