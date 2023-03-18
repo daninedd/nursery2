@@ -93,7 +93,7 @@ class PurchaseRequest extends FormRequest
                     $fail('求购已过期或被删除');
                 }
                 if ($userId != $purchase->user_id && $purchase->is_expired) {
-                    $fail('求购详情不存在~');
+                    //$fail('求购详情不存在~'); //todo 是否显示过期的求购
                 }
             }],
             'end_purchase_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
