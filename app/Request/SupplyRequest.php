@@ -44,7 +44,7 @@ class SupplyRequest extends FormRequest
 
     public array $scenes = [
         'add' => ['title', 'productId', 'categoryId', 'price1', 'price2', 'specs', 'unit',
-            'price_type', 'address', 'media', 'remark', 'num', ],
+            'price_type', 'address', 'media', 'remark', 'num', 'push_status' ],
         'edit' => ['id', 'title', 'price1', 'price2', 'specs', 'unit',
             'price_type', 'address', 'media', 'remark', 'num', ],
         self::SCENE_DETAIL => ['id'],
@@ -169,7 +169,7 @@ class SupplyRequest extends FormRequest
         $supply->ambiguous_price = 0;
         $supply->price_type = $data['price_type'];
         $supply->unit = $data['unit'];
-        $supply->push_status = 1;
+        $supply->push_status = $data['push_status'];
         $supply->recommend_status = 0;
         $supply->verify_status = 1;
         $supply->description = $data['remark'];
@@ -195,7 +195,7 @@ class SupplyRequest extends FormRequest
         $supply->lowest_price = $data['price1'];
         $supply->highest_price = $data['price2'] ?: $data['price1'];
         $supply->price_type = $data['price_type'];
-        $supply->push_status = 1;
+        $supply->push_status = $data['push_status'];
         $supply->description = $data['remark'];
         $supply->num = $data['num'];
         $supply->unit = $data['unit'];

@@ -114,7 +114,6 @@ class WebSocketController extends BaseNamespace
         $messageId = $mongoClient->insert('nursery.messages', $msg);
         if ($sid) {
             $socket->to($sid)->emit('getMessageCount', $this->getUnreadCount($message['user_id']));
-            $contact = User::findFromCache($message['user_id']);
             $mySelf = User::findFromCache($me);
             $socket->to($sid)->emit('receive_conversation', [
                 'c_id' => strval($conversationId),
@@ -132,6 +131,9 @@ class WebSocketController extends BaseNamespace
             ]);
             // 推送消息
             $socket->to($sid)->emit('receiveMessage', array_merge(['message_id' => $messageId], $msg));
+        }
+        if (in_array($msg['msg_type'], ['image', 'video'])){
+            $msg['content'] = env('OSS_PREFIX') . '/' .$msg['content'];
         }
         return array_merge(['_id' => ['$oid' => $messageId]], ['message_id' => $messageId], array_merge($msg, ['contact_avatar' => User::findFromCache($message['user_id'])->full_avatar]));
     }
