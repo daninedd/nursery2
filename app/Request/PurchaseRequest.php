@@ -48,8 +48,8 @@ class PurchaseRequest extends FormRequest
 
     public array $scenes = [
         self::SCENE_ADD => ['title', 'productId', 'catedgoryId', 'target_price', 'specs', 'unit',
-            'price_type', 'address', 'media', 'remark', 'num', 'must_have', 'expire_at'],
-        self::SCENE_EDIT => ['id', 'target_price', 'specs', 'unit', 'expire_at', 'must_have',
+            'price_type', 'address', 'media', 'remark', 'num', 'must_have', 'expire_at', 'specs.show', 'specs.hidden'],
+        self::SCENE_EDIT => ['id', 'target_price', 'specs','specs.show', 'specs.hidden', 'unit', 'expire_at', 'must_have',
             'price_type', 'address', 'media', 'remark', 'num'],
         self::SCENE_DETAIL => ['id'],
         self::SCENE_OFFER => ['purchase_id', 'offerPrice', 'offerPhone', 'offerMedia', 'offerAddress', 'remark'],
@@ -120,7 +120,7 @@ class PurchaseRequest extends FormRequest
             'target_price' => 'required|numeric|min:0',
             'specs' => ['required', 'array:show,hiddens'],
             'specs.show' => ['present', 'array'],
-            'specs.hiddens' => ['present', 'array'],
+            'specs.hiddens' => ['present', 'array',],
             'unit' => ['required', Rule::in(array_keys(Constant::UNITS))],
             'price_type' => ['required', Rule::in([1, 2])],
             'address' => 'required|max:32',
@@ -459,9 +459,7 @@ class PurchaseRequest extends FormRequest
         foreach ($specs['show'] as $k => $specShow) {
             if ($specShow['type'] == 'multi_input' && ! empty($specShow['value1'])) {
                 $specs['show'][$k]['has_value'] = true;
-                $specs['show'][$k]['value_text'] = $specShow['value1'] .
-                    ($specShow['value2'] ? ' - ' . $specShow['value2'] : '') .
-                    $specShow['unit'];
+                $specs['show'][$k]['value_text'] = $specShow['value1'] . $specShow['unit'];
             } elseif ($specShow['type'] == 'data_check_box' && ! empty($specShow['value'])) {
                 $specs['show'][$k]['has_value'] = true;
                 $valueText = array_filter($specShow['values'], function ($v) use ($specShow) {
@@ -476,9 +474,7 @@ class PurchaseRequest extends FormRequest
         foreach ($specs['hiddens'] as $k => $specHidden) {
             if ($specHidden['type'] == 'multi_input' && ! empty($specHidden['value1'])) {
                 $specs['hiddens'][$k]['has_value'] = true;
-                $specs['hiddens'][$k]['value_text'] = $specHidden['value1'] .
-                    ($specHidden['value2'] ? ' - ' . $specHidden['value2'] : '') .
-                    $specHidden['unit'];
+                $specs['hiddens'][$k]['value_text'] = $specHidden['value1'] . $specHidden['unit'];
             } elseif ($specHidden['type'] == 'data_check_box' && ! empty($specHidden['value'])) {
                 $specs['hiddens'][$k]['has_value'] = true;
                 $valueText = array_filter($specHidden['values'], function ($v) use ($specHidden) {

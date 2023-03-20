@@ -47,6 +47,7 @@ class MarketQuotation extends Model
      * The attributes that should be cast to native types.
      */
     protected array $casts = ['id' => 'int', 'no' => 'integer', 'product_id' => 'integer',
+        'product_snapshot' => 'array', 'category_snapshot' => 'array',
         'category_id' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime',
     ];
 }
