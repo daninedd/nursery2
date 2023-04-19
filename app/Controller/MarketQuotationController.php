@@ -30,7 +30,6 @@ class MarketQuotationController extends AbstractController
             ->groupBy(['year', 'month', 'title', 'publish_time', 'term', 'publish_department'])->orderByDesc('month')->get();
         return $this->success($data);
     }
-    //todo 去掉product_id搜索
 
     /**
      *市场行情详情.

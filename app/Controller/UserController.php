@@ -39,7 +39,7 @@ class UserController extends AbstractController
         if (empty($code)) {
             throw new BusinessException(ErrorCode::VALIDATE_ERROR);
         }
-//        $user = User::find('402143444857827329');
+//        $user = User::find('491030001194422273');
 //
 //        $userProfile = [
 //            'user_id' => $user->id,
@@ -120,13 +120,18 @@ class UserController extends AbstractController
     public function getPhoneNumber(): \Psr\Http\Message\ResponseInterface
     {
         $userId = $this->request->query('user_id');
-        if ($userId){
+        $selfUserId = $this->request->getAttribute('userId');
+        $self = User::findFromCache($selfUserId);
+        if ($self->member_status != User::VIP){
+            throw new BusinessException(ErrorCode::PROFILE_ERROR, '请先完善资料~');
+        }
+        if ($userId) {
             $user = User::findFromCache($userId);
             if ($user->phone) {
                 return $this->success(['v_phone' => $user->phone]);
             }
             throw new BusinessException(400, '用户还未绑定手机号');
-        }else{
+        } else {
             throw new BusinessException(400, '用户id不正确');
         }
     }

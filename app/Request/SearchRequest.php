@@ -67,7 +67,8 @@ class SearchRequest extends FormRequest
             $query = Supply::query()->where([['push_status', Supply::PUSH_STATUS_ENABLE], ['deleted_at', null]]);
             $query->where(function (Builder $q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('product_name', 'like', "%{$keyword}%");
+                    ->orWhere('product_name', 'like', "%{$keyword}%")
+                    ->orWhereRaw('MATCH (title,product_name) AGAINST (?)', [$keyword]);
             });
             $query->orderBy('updated_at', 'DESC');
             return $query->paginate(20);
@@ -78,7 +79,8 @@ class SearchRequest extends FormRequest
             $query = Purchase::query()->where([['push_status', Purchase::PUSH_STATUS_ENABLE], ['deleted_at', null]]);
             $query->where(function (Builder $q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('product_name', 'like', "%{$keyword}%");
+                    ->orWhere('product_name', 'like', "%{$keyword}%")
+                    ->orWhereRaw('MATCH (title,product_name) AGAINST (?)', [$keyword]);
             });
             $query->orderBy('expire_at', 'DESC');
             return $query->paginate(20);

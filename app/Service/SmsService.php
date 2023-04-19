@@ -83,7 +83,6 @@ class SmsService
             return true;
         }
         $code = $this->cache->get(self::getCodeCacheKey($phone, $type));
-        var_dump($code);
         if ($code && $code['code'] == $input_code) {
             $this->cache->delete(self::getCodeCacheKey($phone, $type));
             return true;

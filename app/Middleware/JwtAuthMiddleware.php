@@ -49,8 +49,6 @@ class JwtAuthMiddleware implements MiddlewareInterface
                     $isValidToken = true;
                 }
             } catch (\Exception $e) {
-                echo $e->getMessage();
-                var_dump($e->getTraceAsString());
                 $data = [
                     'code' => 401,
                     'msg' => '对不起，token验证没有通过',

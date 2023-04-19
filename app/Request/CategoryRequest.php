@@ -12,6 +12,7 @@ use App\Model\Category;
 use App\Model\Product;
 use App\Model\Supply;
 use Carbon\Carbon;
+use Hyperf\Cache\Annotation\Cacheable;
 use Hyperf\Database\Query\Builder;
 use Hyperf\Validation\Request\FormRequest;
 use Hyperf\Validation\Rule;
@@ -76,13 +77,19 @@ class CategoryRequest extends FormRequest
     public function searchList()
     {
         $data = $this->validated();
-        $keyword = $data['keyword'];
+        return $this->getCategorySearchList($data['keyword']);
+    }
+
+
+    #[Cacheable(prefix: "search_category", ttl: 120)]
+    protected function getCategorySearchList($keyword){
+        $result = [];
         $products = Product::select(['id', 'name', 'category_id'])
-            ->where('name', 'like', "%{$keyword}%")
-            ->orWhere('nick_name', 'like', "%{$keyword}%")
+            ->whereRaw('MATCH (name,nick_name) AGAINST (?)', [$keyword])
+            //->where('name', 'like', "%{$keyword}%")
+            //->orWhere('nick_name', 'like', "%{$keyword}%")
             ->with('category:name,id')
             ->get();
-        $result = [];
         if ($products->isEmpty()) {
             $result = $this->getDefaultList();
         } else {

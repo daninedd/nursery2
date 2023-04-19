@@ -22,4 +22,6 @@ class ErrorCode extends AbstractConstants
      * @Message("VALIDATE_ERROR")
      */
     public const VALIDATE_ERROR = 400;
+
+    public const PROFILE_ERROR = 4011;
 }

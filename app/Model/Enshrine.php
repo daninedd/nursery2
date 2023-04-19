@@ -46,6 +46,10 @@ class Enshrine extends Model
 
     public function getShowItemAttribute()
     {
+        if ($this->type == Enshrine::TYPE_SUPPLY){
+            $item = Supply::findFromCache($this->item_id);
+            $visit_count = $item ? $item->visit_count : 0;
+        }
         return [
             'id' => $this->item_snapshot['id'] ?? null,
             'num' => $this->item_snapshot['num'] ?? '',
@@ -53,7 +57,7 @@ class Enshrine extends Model
             'title' => $this->item_snapshot['title'] ?? '',
             'medias' => $this->item_snapshot['medias'] ?? '',
             'address' => $this->item_snapshot['address'] ?? '',
-            'visit_count' => $this->item_snapshot['visit_count'] ?? '',
+            'visit_count' => $visit_count ?? 0,
             'product_name' => $this->item_snapshot['product_name'] ?? '',
             'created_at' => $this->item_snapshot['created_at'] ?? '',
             'expire_at' => $this->item_snapshot['expire_at'] ?? null,

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App\Request;
 
 use App\Constants\Constant;
+use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Job\CounterVisitJob;
 use App\Model\Address;
@@ -49,7 +50,7 @@ class PurchaseRequest extends FormRequest
     public array $scenes = [
         self::SCENE_ADD => ['title', 'productId', 'catedgoryId', 'target_price', 'specs', 'unit',
             'price_type', 'address', 'media', 'remark', 'num', 'must_have', 'expire_at', 'specs.show', 'specs.hidden'],
-        self::SCENE_EDIT => ['id', 'target_price', 'specs','specs.show', 'specs.hidden', 'unit', 'expire_at', 'must_have',
+        self::SCENE_EDIT => ['id', 'target_price', 'specs', 'specs.show', 'specs.hidden', 'unit', 'expire_at', 'must_have',
             'price_type', 'address', 'media', 'remark', 'num'],
         self::SCENE_DETAIL => ['id'],
         self::SCENE_OFFER => ['purchase_id', 'offerPrice', 'offerPhone', 'offerMedia', 'offerAddress', 'remark'],
@@ -77,6 +78,12 @@ class PurchaseRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->getRequest()->getAttribute('userId');
+        if(in_array($this->getScene(), [self::SCENE_ADD, self::SCENE_EDIT, self::SCENE_OFFER])){
+            $user = User::findFromCache($userId);
+            if ($user->member_status != User::VIP){
+                throw new BusinessException(ErrorCode::PROFILE_ERROR, '请先完善资料~');
+            }
+        }
         $rules = [
             'delete_id' => ['required', Rule::exists('purchases', 'id')->where(function (Builder $query) use ($userId) {
                 $query->where('user_id', $userId);
@@ -120,7 +127,7 @@ class PurchaseRequest extends FormRequest
             'target_price' => 'required|numeric|min:0',
             'specs' => ['required', 'array:show,hiddens'],
             'specs.show' => ['present', 'array'],
-            'specs.hiddens' => ['present', 'array',],
+            'specs.hiddens' => ['present', 'array'],
             'unit' => ['required', Rule::in(array_keys(Constant::UNITS))],
             'price_type' => ['required', Rule::in([1, 2])],
             'address' => 'required|max:32',
@@ -318,7 +325,8 @@ class PurchaseRequest extends FormRequest
             $query->where(function (\Hyperf\Database\Model\Builder $q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
                     ->orWhere('product_name', 'like', "%{$keyword}%")
-                    ->orWhere('product_nickname', 'like', "%{$keyword}%");
+                    ->orWhere('product_nickname', 'like', "%{$keyword}%")
+                    ->orWhereRaw('MATCH (title,product_name) AGAINST (?)', [$keyword]);
             });
         }
         if ($areas) {

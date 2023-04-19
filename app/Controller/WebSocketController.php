@@ -7,6 +7,8 @@ declare(strict_types=1);
  */
 namespace App\Controller;
 
+use App\Constants\ErrorCode;
+use App\Exception\BusinessException;
 use App\Model\User;
 use App\Task\MongoTask;
 use Hyperf\Di\Annotation\Inject;
@@ -40,19 +42,6 @@ class WebSocketController extends BaseNamespace
 //        $socket->emit('event', '注册成功!');
 //    }
 
-    #[Event('say')]
-    public function onSay(Socket $socket, $data)
-    {
-        $sid = $data;
-
-        $this->to($sid)->emit('event', ['a' => 'b', 'c' => 'd']);
-        // $data = Json::decode($data);
-        // $this->to($data['room']);
-        // $socket->to($socket->getSid())->emit('event', $socket->getSid() . " say: {$data['message']}");
-//        $this->emit('event', $socket->getSid());
-        // return 'hello' . $socket->getSid();
-    }
-
     #[Event('disconnect')]
     public function onDisconnect(Socket $socket)
     {
@@ -82,10 +71,16 @@ class WebSocketController extends BaseNamespace
     public function onSendMessage(Socket $socket, $token, $message)
     {
         $me = $this->getUserId($token);
+        if (User::findFromCache($me)->member_status != User::VIP){
+            return ['err_code' => ErrorCode::PROFILE_ERROR, 'message' => '请完善资料'];
+        }
         if (! isset($message['content']) || ! $message['content']) {
             return false;
         }
         if (! isset($message['msg_type']) || ! in_array($message['msg_type'], ['text', 'image', 'video', 'card'])) {
+            return false;
+        }
+        if (empty($message['user_id'])) {
             return false;
         }
         $sid = $this->redis->hGet('ws:socketio', $message['user_id']);
@@ -132,8 +127,8 @@ class WebSocketController extends BaseNamespace
             // 推送消息
             $socket->to($sid)->emit('receiveMessage', array_merge(['message_id' => $messageId], $msg));
         }
-        if (in_array($msg['msg_type'], ['image', 'video'])){
-            $msg['content'] = env('OSS_PREFIX') . '/' .$msg['content'];
+        if (in_array($msg['msg_type'], ['image', 'video'])) {
+            $msg['content'] = env('OSS_PREFIX') . '/' . $msg['content'];
         }
         return array_merge(['_id' => ['$oid' => $messageId]], ['message_id' => $messageId], array_merge($msg, ['contact_avatar' => User::findFromCache($message['user_id'])->full_avatar]));
     }

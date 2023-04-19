@@ -5,10 +5,10 @@ declare(strict_types=1);
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
  */
-
 namespace App\Request;
 
 use App\Constants\Constant;
+use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
 use App\Job\CounterVisitJob;
 use App\Model\Address;
@@ -51,7 +51,7 @@ class SupplyRequest extends FormRequest
         self::SCENE_EDIT => ['id', 'title', 'price1', 'price2', 'specs', 'specs.show', 'specs.hidden', 'unit',
             'price_type', 'address', 'media', 'remark', 'num', 'push_status'],
         self::SCENE_DETAIL => ['id'],
-        self::SCENE_LIST => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order',], // order1:供应状态,order2:浏览次数,3:发布时间
+        self::SCENE_LIST => ['keyword', 'order1', 'order2', 'order3', 'areas', 'category', 'crown', 'diameter', 'height', 'order'], // order1:供应状态,order2:浏览次数,3:发布时间
         self::SCENE_USER_SUPPLY_LIST => ['push_status'],
         self::SCENE_REFRESH_SUPPLY => ['supply_id'],
         self::SCENE_RECOMMEND_LIST => ['id'],
@@ -78,6 +78,12 @@ class SupplyRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->getRequest()->getAttribute('userId');
+        if ($this->getScene() == self::SCENE_ADD || $this->getScene() == self::SCENE_EDIT){
+            $user = User::findFromCache($userId);
+            if ($user->member_status == User::GUEST){
+                throw new BusinessException(ErrorCode::PROFILE_ERROR, '请先完善资料');
+            }
+        }
         return [
             'id' => ['required', function ($attr, $value, $fail) use ($userId) {
                 $supply = Supply::findFromCache($value);
@@ -97,7 +103,7 @@ class SupplyRequest extends FormRequest
             }],
             'down_id' => ['required', Rule::exists('supplies', 'id')->where(function (\Hyperf\Database\Query\Builder $query) use ($userId) {
                 $query->where('user_id', $userId);
-            }),],
+            }), ],
             'supply_id' => ['required',
                 function ($attr, $value, $fail) {
                     if ($this->cache->has(Supply::genRefreshCacheKey($value))) {
@@ -111,7 +117,7 @@ class SupplyRequest extends FormRequest
             ],
             'title' => 'required|max:32',
             'productId' => ['present', 'int', function ($attr, $value, $fail) {
-                if ($value > 0 && !Product::where('id', $value)->exists()) {
+                if ($value > 0 && ! Product::where('id', $value)->exists()) {
                     $fail("The {$attr} is invalid");
                 }
             }],
@@ -121,7 +127,7 @@ class SupplyRequest extends FormRequest
             'specs' => ['required', 'array:show,hiddens'],
             'specs.show' => ['present', 'array', function ($attr, $specs, $fail) {
                 foreach ($specs as $spec) {
-                    if (!isset($spec['type']) || !in_array($spec['type'], self::SPECS_TYPE)) {
+                    if (! isset($spec['type']) || ! in_array($spec['type'], self::SPECS_TYPE)) {
                         $fail('参数类型错误');
                     } else {
                         if ($spec['type'] == 'multi_input') {
@@ -129,7 +135,7 @@ class SupplyRequest extends FormRequest
                             $value_t2 = $spec['value2'] ?? 0;
                             $value_t1 = intval($value_t1);
                             $value_t2 = intval($value_t2);
-                            if ($value_t1 && ($value_t2 < $value_t1)){
+                            if ($value_t1 && ($value_t2 < $value_t1)) {
                                 $fail($spec['label'] . '第一个参数不能小于第二个参数');
                             }
                         }
@@ -138,7 +144,7 @@ class SupplyRequest extends FormRequest
             }],
             'specs.hiddens' => ['present', 'array', function ($attr, $specs, $fail) {
                 foreach ($specs as $spec) {
-                    if (!isset($spec['type']) || !in_array($spec['type'], self::SPECS_TYPE)) {
+                    if (! isset($spec['type']) || ! in_array($spec['type'], self::SPECS_TYPE)) {
                         $fail('参数类型错误');
                     } else {
                         if ($spec['type'] == 'multi_input') {
@@ -146,7 +152,7 @@ class SupplyRequest extends FormRequest
                             $value_t2 = $spec['value2'] ?? 0;
                             $value_t1 = intval($value_t1);
                             $value_t2 = intval($value_t2);
-                            if ($value_t1 && ($value_t2 < $value_t1)){
+                            if ($value_t1 && ($value_t2 < $value_t1)) {
                                 $fail($spec['label'] . '第一个参数不能小于第二个参数');
                             }
                         }
@@ -172,8 +178,6 @@ class SupplyRequest extends FormRequest
             'height' => ['string'],
             'order' => [Rule::in(['default', 'visit', 'publish_time'])],
         ];
-
-
     }
 
     public function messages(): array
@@ -269,7 +273,7 @@ class SupplyRequest extends FormRequest
         if ($keyword) {
             $query->where(function (Builder $q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('product_name', 'like', "%{$keyword}%");
+                    ->orWhereRaw('MATCH (title,product_name) AGAINST (?)', [$keyword]);
             });
         }
         if ($areas) {
@@ -292,10 +296,10 @@ class SupplyRequest extends FormRequest
                 if ($crown_value[0] && $crown_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
                                        'value1')) as UNSIGNED) between {$crown_value[0]} and {$crown_value[1]}";
-                } elseif ($crown_value[0] && !$crown_value[1]) {
+                } elseif ($crown_value[0] && ! $crown_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
                                        'value1')) as UNSIGNED) >= {$crown_value[0]}";
-                } elseif (!$crown_value[0] and $crown_value[1]) {
+                } elseif (! $crown_value[0] and $crown_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '冠幅')), 'label',
                                        'value1')) as UNSIGNED) <= {$crown_value[1]}";
                 }
@@ -310,10 +314,10 @@ class SupplyRequest extends FormRequest
                 if ($diameter_value[0] && $diameter_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
                                        'value1')) as UNSIGNED) between {$diameter_value[0]} and {$diameter_value[1]}";
-                } elseif ($diameter_value[0] && !$diameter_value[1]) {
+                } elseif ($diameter_value[0] && ! $diameter_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
                                        'value1')) as UNSIGNED) >= {$diameter_value[0]}";
-                } elseif (!$diameter_value[0] and $diameter_value[1]) {
+                } elseif (! $diameter_value[0] and $diameter_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '杆径')), 'label',
                                        'value1')) as UNSIGNED) <= {$diameter_value[1]}";
                 }
@@ -328,10 +332,10 @@ class SupplyRequest extends FormRequest
                 if ($height_value[0] && $height_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
                                        'value1')) as UNSIGNED) between {$height_value[0]} and {$height_value[1]}";
-                } elseif ($height_value[0] && !$height_value[1]) {
+                } elseif ($height_value[0] && ! $height_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
                                        'value1')) as UNSIGNED) >= {$height_value[0]}";
-                } elseif (!$height_value[0] and $height_value[1]) {
+                } elseif (! $height_value[0] and $height_value[1]) {
                     $sql = " CAST(json_extract(specs, REPLACE(json_unquote(json_search(specs, 'one', '高度')), 'label',
                                        'value1')) as UNSIGNED) <= {$height_value[1]}";
                 }
@@ -371,11 +375,12 @@ class SupplyRequest extends FormRequest
         $detail = Supply::findFromCache($id);
         $product_name = $detail->product_name;
         $query = Supply::query()->with('user:id,name,avatar')
-            ->where([['push_status', Supply::PUSH_STATUS_ENABLE], ['deleted_at', null], ['deleted_at', '<>', null]]);
-        $query->where(function (Builder $q) use ($product_name) {
-            $q->where('title', 'like', "%{$product_name}%")
-                ->orWhere('product_name', 'like', "%{$product_name}%");
-        });
+            ->where([['push_status', Supply::PUSH_STATUS_ENABLE], ['deleted_at', null], ['id', '<>', $id]]);
+        $query->whereRaw('MATCH (title,product_name) AGAINST (?)', [$product_name]);
+//        $query->where(function (Builder $q) use ($product_name) {
+//            $q->where('title', 'like', "%{$product_name}%")
+//                ->orWhere('product_name', 'like', "%{$product_name}%");
+//        });
         $query->orderByRaw('sort desc, updated_at desc');
         return $query->paginate(10);
     }
@@ -430,12 +435,12 @@ class SupplyRequest extends FormRequest
     protected function formatSpecs($specs): array
     {
         foreach ($specs['show'] as $k => $specShow) {
-            if ($specShow['type'] == 'multi_input' && !empty($specShow['value1'])) {
+            if ($specShow['type'] == 'multi_input' && ! empty($specShow['value1'])) {
                 $specs['show'][$k]['has_value'] = true;
                 $specs['show'][$k]['value_text'] = $specShow['value1'] .
-                    ($specShow['value2']!=$specShow['value1'] ? ' - ' . $specShow['value2'] : '') .
+                    ($specShow['value2'] != $specShow['value1'] ? ' - ' . $specShow['value2'] : '') .
                     $specShow['unit'];
-            } elseif ($specShow['type'] == 'data_check_box' && !empty($specShow['value'])) {
+            } elseif ($specShow['type'] == 'data_check_box' && ! empty($specShow['value'])) {
                 $specs['show'][$k]['has_value'] = true;
                 $valueText = array_filter($specShow['values'], function ($v) use ($specShow) {
                     return $v['value'] == $specShow['value'];
@@ -447,12 +452,12 @@ class SupplyRequest extends FormRequest
             }
         }
         foreach ($specs['hiddens'] as $k => $specHidden) {
-            if ($specHidden['type'] == 'multi_input' && !empty($specHidden['value1'])) {
+            if ($specHidden['type'] == 'multi_input' && ! empty($specHidden['value1'])) {
                 $specs['hiddens'][$k]['has_value'] = true;
                 $specs['hiddens'][$k]['value_text'] = $specHidden['value1'] .
-                    ($specHidden['value2']!= $specHidden['value1'] ? ' - ' . $specHidden['value2'] : '') .
+                    ($specHidden['value2'] != $specHidden['value1'] ? ' - ' . $specHidden['value2'] : '') .
                     $specHidden['unit'];
-            } elseif ($specHidden['type'] == 'data_check_box' && !empty($specHidden['value'])) {
+            } elseif ($specHidden['type'] == 'data_check_box' && ! empty($specHidden['value'])) {
                 $specs['hiddens'][$k]['has_value'] = true;
                 $valueText = array_filter($specHidden['values'], function ($v) use ($specHidden) {
                     return $v['value'] == $specHidden['value'];

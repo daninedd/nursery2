@@ -33,13 +33,13 @@ class User extends Model implements Authenticatable
 {
     use Snowflake;
 
-    public const GUEST = 'guest';
+    public const GUEST = 'guest'; //获取到Open_id
 
     // 游客
-    public const MEMBER = 'member';
+    public const MEMBER = 'member'; //绑定手机号后
 
     // 绑定了手机号
-    public const VIP = 'vip';
+    public const VIP = 'vip'; //填写完头像和昵称
 
     // 手机号和昵称头像全部绑定
     /**

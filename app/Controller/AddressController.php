@@ -47,17 +47,17 @@ class AddressController extends AbstractController
         $p_id = $this->request->query('p_id');
         $level = $this->request->query('level');
         if ($level == 0) {
-            $res = [['name' => '全部地区', 'value' => 0, 'level' => 0]];
+            $res = [['name' => '全部地区', 'value' => 0, 'level' => 0, 'submenu' => []]];
         } elseif ($level == 1) {
-            $res = [['name' => '全部城市', 'value' => $p_id, 'level' => 1]];
+            $res = [['name' => '全部城市', 'value' => $p_id, 'level' => 1, 'submenu' => []]];
         } elseif ($level == 2) {
-            $res = [['name' => '全部区县', 'value' => $p_id, 'level' => 2]];
+            $res = [['name' => '全部区县', 'value' => $p_id, 'level' => 2, 'submenu' => []]];
         }
         $addrs = Address::query()->select(['id', 'code', 'name', 'level'])->where('parent_id', $p_id)->get();
         foreach ($addrs as $addr) {
             $res[] = ['name' => $addr->name, 'value' => $addr->id, 'level' => $addr->level, 'submenu' => []];
         }
-        $request = $this->container->get(AddressRequest::class);
-        return $this->success($request->list());
+        //$request = $this->container->get(AddressRequest::class);
+        return $this->success($res);
     }
 }
