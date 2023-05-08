@@ -21,10 +21,10 @@ class IndexController extends AbstractController
     public function banner()
     {
         $data = [
-            ['id' => 1, 'src' => 'url1', 'url' => env('STATIC_PREFIX') . '/static/images/1.jpg'],
-            ['id' => 2, 'src' => 'url2', 'url' => env('STATIC_PREFIX') . '/static/images/2.jpg'],
-            ['id' => 3, 'src' => 'url3', 'url' => env('STATIC_PREFIX') . '/static/images/3.jpg'],
-            ['id' => 4, 'src' => 'url4', 'url' => env('STATIC_PREFIX') . '/static/images/4.jpg'],
+            ['id' => '', 'src' => 'url1', 'url' => env('STATIC_PREFIX') . '/static/images/banner/banner1.jpg'],
+            ['id' => '492734051128455169', 'src' => 'url2', 'url' => env('STATIC_PREFIX') . '/static/images/banner/banner2.jpg'],
+            ['id' => '496473714611785728', 'src' => 'url3', 'url' => env('STATIC_PREFIX') . '/static/images/banner/banner3.jpg'],
+            ['id' => '496623158590246912', 'src' => 'url4', 'url' => env('STATIC_PREFIX') . '/static/images/banner/banner4.jpg'],
         ];
         return $this->success($data);
     }

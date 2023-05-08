@@ -26,7 +26,7 @@ class CreateAddressTable extends Migration
             $table->unsignedTinyInteger('level')->default(1)->comment('等级');
             $table->unsignedTinyInteger('status')->default(1)->comment('状态');
             $table->dateTime('created_at')->useCurrent();
-            $table->dateTime('updated_at')->useCurrent();
+            $table->dateTime('updated_at');
             $table->softDeletes();
         });
     }

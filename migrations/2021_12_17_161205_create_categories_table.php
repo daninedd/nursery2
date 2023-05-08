@@ -25,7 +25,7 @@ class CreateCategoriesTable extends Migration
             $table->unsignedInteger('sort')->default(0)->comment('排序');
             $table->string('description', 255)->default('')->comment('描述');
             $table->dateTime('created_at')->useCurrent();
-            $table->dateTime('updated_at')->useCurrent();
+            $table->dateTime('updated_at');
             $table->softDeletes();
         });
     }

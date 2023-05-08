@@ -74,8 +74,6 @@ class SearchRequest extends FormRequest
             return $query->paginate(20);
         }
         if ($validateData['type'] == 'purchase') {
-            // todo 修改时间
-            // ['expire_at', '<', date('Y-m-d')]
             $query = Purchase::query()->where([['push_status', Purchase::PUSH_STATUS_ENABLE], ['deleted_at', null]]);
             $query->where(function (Builder $q) use ($keyword) {
                 $q->where('title', 'like', "%{$keyword}%")
