@@ -35,6 +35,8 @@ class SupplyRequest extends FormRequest
 
     public const SCENE_LIST = 'list';
 
+    public const SCENE_INTERESTING_LIST = 'interesting_list';
+
     public const SCENE_USER_SUPPLY_LIST = 'user_supply_list';
 
     public const SCENE_REFRESH_SUPPLY = 'refresh_supply';
@@ -56,6 +58,7 @@ class SupplyRequest extends FormRequest
         self::SCENE_REFRESH_SUPPLY => ['supply_id'],
         self::SCENE_RECOMMEND_LIST => ['id'],
         self::SCENE_DOWN_SUPPLY => ['down_id'],
+        self::SCENE_INTERESTING_LIST => [],
     ];
 
     #[Inject]
@@ -78,9 +81,9 @@ class SupplyRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->getRequest()->getAttribute('userId');
-        if ($this->getScene() == self::SCENE_ADD || $this->getScene() == self::SCENE_EDIT){
+        if ($this->getScene() == self::SCENE_ADD || $this->getScene() == self::SCENE_EDIT) {
             $user = User::findFromCache($userId);
-            if ($user->member_status == User::GUEST){
+            if ($user->member_status == User::GUEST) {
                 throw new BusinessException(ErrorCode::PROFILE_ERROR, '请先完善资料');
             }
         }
@@ -364,6 +367,14 @@ class SupplyRequest extends FormRequest
         }
         $query->orderByRaw('sort desc, created_at desc');
         return $query->paginate(20);
+    }
+
+    public function getInterestingList()
+    {
+        $query = Supply::query()->with('user:id,name,avatar')
+            ->where([['push_status', Supply::PUSH_STATUS_ENABLE], ['deleted_at', null]]);
+        $query->orderByRaw('sort desc, created_at desc');
+        return $query->limit(5)->get();
     }
 
     /** 获取推荐列表 */

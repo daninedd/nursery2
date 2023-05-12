@@ -69,6 +69,16 @@ class SupplyController extends AbstractController
         return $this->success($data);
     }
 
+    #[GetMapping(path: 'getInterestingList')]
+    public function getInterestingList()
+    {
+        $request = $this->container->get(SupplyRequest::class);
+        $request->scene(SupplyRequest::SCENE_INTERESTING_LIST);
+        $request->validateResolved();
+        $data = $request->getInterestingList();
+        return $this->success($data);
+    }
+
     /**
      * 用户的供应列表.
      */
