@@ -56,6 +56,7 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = $this->getRequest()->getAttribute('userId');
         return [
             'bindType' => ['required', Rule::in([self::BIND_TYPE_WX, self::BIND_TYPE_CUSTOM])],
             'encryptedData' => ['requiredIf:bindType,wx'],
@@ -74,7 +75,11 @@ class UserRequest extends FormRequest
                     $fail('验证码错误');
                 }
             }],
-            'nickname' => ['required', 'max:20'],
+            'nickname' => ['required', 'max:20', function ($attr, $value, $fail) use ($userId) {
+                if (User::findFromCache($userId)->member_status == User::GUEST) {
+                    $fail('请先登录');
+                }
+            }],
             'avatarUrl' => ['required', function ($attr, $value, $fail) {
                 $exist = $this->filesystem->fileExists($value);
                 $this->filesystem->fileExists($value);
