@@ -59,10 +59,10 @@ class EnshrineRequest extends FormRequest
                     [
                         ['id', $value],
                         ['push_status', Supply::PUSH_STATUS_ENABLE],
-                        ['expire_at', '>=', date('Y-m-d')],
+//                        ['expire_at', '>=', date('Y-m-d')],
                     ]
                 )->doesntExist()) {
-                    $fail('采购信息不存在');
+                    $fail('采购信息已过期');
                 }
             }],
             'delete_id' => [
