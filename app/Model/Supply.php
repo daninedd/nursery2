@@ -73,7 +73,7 @@ class Supply extends Model
      */
     protected array $casts = ['id' => 'string', 'product_id' => 'integer', 'category_id' => 'integer', 'user_id' => 'string', 'ambiguous_price' => 'integer', 'price_type' => 'integer', 'product_snapshot' => 'array', 'category_snapshot' => 'array', 'specs' => 'array', 'address' => 'array', 'medias' => 'array', 'push_status' => 'integer', 'recommend_status' => 'integer', 'verify_status' => 'integer', 'sort' => 'integer', 'num' => 'integer', 'visit_count' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
 
-    protected array $hidden = ['product_id', 'category_id', 'push_status', 'recommend_status', 'verify_status', 'expire_at', 'updated_at', 'deleted_at', 'product_snapshot', 'category_snapshot', 'ambiguous_price'];
+    protected array $hidden = ['product_id', 'category_id', 'push_status', 'recommend_status', 'verify_status', 'expire_at', 'deleted_at', 'product_snapshot', 'category_snapshot', 'ambiguous_price'];
 
     protected array $appends = ['skus', 'unitText'];
 
