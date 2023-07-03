@@ -365,7 +365,7 @@ class SupplyRequest extends FormRequest
                 $query->orderBy('created_at', $validatedData['order3']);
             }
         }
-        $query->orderByRaw('sort desc, created_at desc');
+        $query->orderByRaw('sort desc, updated_at desc');
         return $query->paginate(20);
     }
 
