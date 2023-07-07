@@ -9,8 +9,12 @@ namespace App\Controller;
 
 use App\Constants\ErrorCode;
 use App\Exception\BusinessException;
+use App\Job\CounterVisitJob;
+use App\Job\LoginInfoJob;
 use App\Model\User;
+use App\Service\QueueService;
 use App\Task\MongoTask;
+use App\Utils\Util;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Redis\Redis;
@@ -27,6 +31,11 @@ class WebSocketController extends BaseNamespace
 {
     #[Inject]
     protected Redis $redis;
+    /**
+     * @var BaseNamespace|Socket|mixed
+     */
+    #[Inject]
+    protected QueueService $queueService;
 
     #[Event('event')]
     public function onEvent(Socket $socket, $data)
@@ -61,6 +70,7 @@ class WebSocketController extends BaseNamespace
             $socket->disconnect();
         } else {
             $user_id = $this->getUserId($token);
+            $this->queueService->push(new LoginInfoJob($user_id, Util::getRealIp()));
             $this->redis->hset('ws:socketio', $user_id, $socket->getSid());
             $results = $this->getUnreadCount($user_id);
             $socket->emit('getMessageCount', $results);

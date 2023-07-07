@@ -257,7 +257,7 @@ class SupplyRequest extends FormRequest
             ->load('user')
             ->append(['category', 'has_enshrine'])
             ->makeVisible(['category_id', 'push_status']);
-        $this->queueService->push(CounterVisitJob::TYPE_SUPPLY, $data['id']);
+        $this->queueService->push(new CounterVisitJob(CounterVisitJob::TYPE_SUPPLY, $data['id']));
         return $result;
     }
 

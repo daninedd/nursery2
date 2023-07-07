@@ -266,7 +266,7 @@ class PurchaseRequest extends FormRequest
             $data->makeVisible(['target_price']);
             $data->append(['must_have']);
         }
-        $this->queueService->push(CounterVisitJob::TYPE_PURCHASE, $data['id']);
+        $this->queueService->push(new CounterVisitJob(CounterVisitJob::TYPE_PURCHASE, $data['id']));
         return $data;
     }
 

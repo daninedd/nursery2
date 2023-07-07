@@ -12,6 +12,7 @@ use App\Exception\BusinessException;
 use App\Middleware\JwtAuthMiddleware;
 use App\Model\User;
 use App\Request\UserRequest;
+use App\Utils\Util;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Hyperf\Cache\Cache;
@@ -39,7 +40,7 @@ class UserController extends AbstractController
         if (empty($code)) {
             throw new BusinessException(ErrorCode::VALIDATE_ERROR);
         }
-//        $user = User::find('491030001194422273');
+//        $user = User::find('531451833013690370');
 //
 //        $userProfile = [
 //            'user_id' => $user->id,
@@ -60,7 +61,14 @@ class UserController extends AbstractController
             if ($result && key_exists('openid', $result) && key_exists('session_key', $result)) {
                 $openid = $result['openid'];
                 $session_key = $result['session_key'];
-                $user = User::firstOrCreate(['open_id' => $openid], ['name' => '微信用户', 'member_status' => User::GUEST]);
+                $realIp = Util::getRealIp();
+                $user = User::firstOrCreate(['open_id' => $openid], [
+                    'name' => '微信用户',
+                    'member_status' => User::GUEST,
+                    'register_ip' => $realIp,
+                    'last_Login_ip' => $realIp,
+                    'last_visit_at' => date('Y-m-d H:i:s'),
+                ]);
                 $userProfile = ['user_id' => $user->id, 'username' => $user->name, 'member_status' => $user->member_status, 'avatar_url' => $user->full_avatar];
                 $token = $this->jwt->getToken('default', $userProfile);
                 // session_key存缓存
@@ -122,7 +130,7 @@ class UserController extends AbstractController
         $userId = $this->request->query('user_id');
         $selfUserId = $this->request->getAttribute('userId');
         $self = User::findFromCache($selfUserId);
-        if ($self->member_status != User::VIP){
+        if ($self->member_status != User::VIP) {
             throw new BusinessException(ErrorCode::PROFILE_ERROR, '请先完善资料~');
         }
         if ($userId) {

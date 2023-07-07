@@ -21,6 +21,8 @@ use Qbhy\HyperfAuth\Authenticatable;
  * @property int $gender
  * @property int $vip_level
  * @property string $last_visit_at
+ * @property string $last_login_ip
+ * @property string $register_ip
  * @property int $profile_complete
  * @property string $member_status
  * @property \Carbon\Carbon $created_at
@@ -52,7 +54,7 @@ class User extends Model implements Authenticatable
     /**
      * The attributes that are mass assignable.
      */
-    protected array $fillable = ['name', 'avatar', 'open_id', 'member_status'];
+    protected array $fillable = ['name', 'avatar', 'open_id', 'member_status', 'register_ip'];
 
     /**
      * The attributes that should be cast to native types.
@@ -61,7 +63,7 @@ class User extends Model implements Authenticatable
 
     protected array $appends = ['join_days', 'full_avatar'];
 
-    protected array $hidden = ['open_id', 'last_visit_at', 'id_card', 'phone', 'vip_level', 'updated_at', 'deleted_at'];
+    protected array $hidden = ['open_id', 'last_visit_at', 'id_card', 'phone', 'vip_level', 'last_login_ip', 'register_ip', 'updated_at', 'deleted_at'];
 
     public function getId()
     {
