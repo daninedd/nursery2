@@ -4,6 +4,9 @@ declare(strict_types=1);
 /**
  * This file is part of Nursery2.
  * @author    denglei@4587@163.com
+ * 更新步骤 1.修改对应xlsx，增加一行日期
+ * 2.xlsx上传至服务器
+ * 3.运行 docker compose exec api php bin/hyperf.php market:update 对应xlsx名字
  */
 namespace App\Command;
 
